@@ -26,7 +26,7 @@ much any exploration of nature. I'm always on the lookout for suggestions on new
 to explore!
 
 ::: {#landing-icons}
-[{{< fa brands github title="github" >}}](https://github.com/TDMZ443){target="_blank"} &nbsp; [{{< fa envelope title="envelope" >}}](mailto:tristan.d.zook@lawrence.edu) &nbsp; [{{< fa brands linkedin title="linkedin" >}}](www.linkedin.com/in/tristan-zook-34649a2b1/){target="_blank"} &nbsp;
+[{{< fa brands github title="github" >}}](https://github.com/TDMZ443){target="_blank"} &nbsp; [{{< fa envelope title="envelope" >}}](mailto:tristan.d.zook@lawrence.edu) &nbsp; [{{< fa brands linkedin title="linkedin" >}}](https://www.linkedin.com/in/tristan-zook-34649a2b1/){target="_blank"} &nbsp;
 :::
 :::
 

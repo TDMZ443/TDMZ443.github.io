@@ -11,7 +11,7 @@
     "href": "rlstatsreadme.html#installation",
     "title": "rlstats Package",
     "section": "Installation",
-    "text": "Installation\nYou can install the development version of rlstats from GitHub with:\n#install.packages(\"remotes\")\n#install.packages(\"devtools\")\ndevtools::install_github(\"ADC-405-S26/rlstats\")\nNote: If you’re reading this on the Github source code page, there will be a lot of css jargon that it displays. Scroll past to see the table output."
+    "text": "Installation\nYou can install the development version of rlstats from GitHub with:\n#install.packages(\"remotes\")\n#install.packages(\"devtools\")\ndevtools::install_github(\"ADC-405-S26/rlstats\")"
   },
   {
     "objectID": "rlstatsreadme.html#examples",
