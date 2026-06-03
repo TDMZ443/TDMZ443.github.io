@@ -1,0 +1,12 @@
+---
+title: "Computer Science Senior Capstone"
+toc: false
+about: 
+  template: jolla
+  image-shape: round
+  image-width: 15em
+---
+
+
+For my computer science senior capstone, I begun working on a small business
+with two partners, Jamie Vee and Aaron Stathopoylos.

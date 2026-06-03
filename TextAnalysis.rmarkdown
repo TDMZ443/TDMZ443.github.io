@@ -1,0 +1,325 @@
+---
+title: "What Makes a TED Talk Inspiring?: A Text Analysis of TED Talk Transcripts Using R"
+
+---
+
+```{r setup}
+#| echo: false
+#| output: false
+library(tidyverse)
+library(tidytext)
+library(stringr)
+library(ggplot2)
+library(textdata)
+library(scales)
+library(lubridate)
+library(ggthemes)
+```
+
+# Introduction
+Public speaking has long played an important role in shaping public opinion, spreading knowledge, and inspiring social change. From political speeches to lectures in the classroom, communication influences the way people think about the world and interact with one another. Recently, TED has become one of the most recognizable and influential public speaking platforms hosting talks covering a wide variety of subjects. TED's mission is to communicate "ideas worth spreading" and many of these talks have gained a lot of traction. 
+
+In this project, textual analysis techniques are used to investigate patterns within such TED Talk transcripts. More specifically, this project aims to examine emotional language, and word usage, across TED Talks. The analysis explored whether highly viewed TED Talks tend to use different or stronger emotional language than less popular talks. On top of this, it also analyzes general word usage, comparing across popular and less popular talks in an attempt to get an idea of words or classes of words that may be more consistent with popular vs unpopular talks. To answer these questions, the project applies tokenization, regular expression cleaning, sentiment analysis, tf-idf analysis, and data visualization methods. 
+
+By combining transcript text with metadata such as view counts, this project demonstrates how computational text analysis can uncover meaningful communication patterns in public speaking. The results provide insight into the language characteristics of successful TED Talks while also demonstrating how text mining techniques can be applied to real-world datasets. 
+
+# Data
+The project uses two datasets from the Kaggle TED Talks dataset collection created by Rounak Banik. The first dataset, ted_main.csv, contains metadata for TED Talks published on TED.com through September 2017. It includes variables such as speaker names, talk titles, descriptions, tags, publication dates, comments, duration, and total view counts. These variables make it possible to compare transcript features with measurable audience engagement.
+
+The second dataset, transcripts.csv, contains the full transcript text for TED Talks along with the corresponding talk URL. This dataset provides the textual data necessary for tokenization, sentiment analysis, tf-idf analysis, and work with regex's. By joining the datasets using the shared URL variable, transcript text can be analyzed alongside popularity and topic information.
+
+```{r}
+#| echo: false
+#| output: false
+#Load in the ted talk datasets
+ted_main <- readr::read_csv("ted_main.csv")
+ted_trans <- readr::read_csv("transcripts.csv")
+
+```
+
+```{r}
+#| echo: false
+#| output: false
+#Join two ted datasets so we can have access to metadata + transcript in same df
+ted_data <- right_join(ted_main,ted_trans,by = 'url')
+ted_data <- ted_data %>% select(-c("name")) #remove unnecessary column 
+
+#Fix date formats to datetime format from unix. Also add in a popularity percentile metric so we can filter by this to look at only most and least popular
+ted_data_cleaned <- ted_data %>% 
+  mutate(film_date = as_datetime(film_date), 
+        published_date = as_datetime(published_date)) |> 
+  mutate(
+    popularity_group = case_when(
+      views >= quantile(views, 0.90, na.rm = TRUE) ~ "Most Popular",
+      views <= quantile(views, 0.50, na.rm = TRUE) ~ "Least Popular",
+      TRUE ~ "Middle"
+    )
+  )
+                            
+```
+
+```{r}
+#| echo: false
+#| output: false
+#glimpse(ted_data_cleaned)
+
+#name = "main_speaker":title", so I got rid of that
+
+#we can maybe exclude some rows but I'm not sure? 
+
+#Possibly dont need description (if we have transcript? We could still work with it though?)
+
+#Do we need related talks? I don't know what we'd do with it. Maybe get rid of that?
+
+#Ratings are in a weird format, but might still be useful (its lowkey the sentiment analysis already though. Maybe we could compare?? Might be a fun comparison to see how some prebuilt sentiments compare to actual ratings)
+
+#For ratings and/or tags. Should we put data to long format and have one row per each of those? that would give us possibly a lot of rows, but maybe not too many to be unworkable? I think I'm gonna ask him about this tmr
+```
+
+
+```{r}
+#| echo: false
+#| output: false
+#summary(ted_data)
+```
+
+
+```{r}
+#| echo: false
+#| output: false
+#Tokenize, removing stop words and sound bits (applause, etc)
+data(stop_words)
+
+#tokenize. Use regex to strip of all sound queues (applause, etc) besides
+#those which represent (laughter), as these may be useful for analysis (ie how
+#much is the audience laughing)
+
+#also filter out stop words, numbers (meaningless without context), 
+#exclamations like aaagh or aaargh, and "words" that are two letters. Most seem to be things like "yo", "np", and things meaningless in analysis
+#Also remove talks that only have less than 10 words associated with them. Will skew tf-idf analysis, and are likely uninteresting for our analysis overall
+ted_words <- ted_data_cleaned |>
+  mutate(
+    transcript = str_remove_all(
+      transcript,
+      regex("\\((?!laughter\\))[^\\)]+\\)", ignore_case = TRUE)
+    )
+  ) |> 
+  tidytext::unnest_tokens(output = word, input = transcript) |>
+  filter(!(word %in% stop_words$word)) |>     
+  filter(!(str_detect(word, pattern = "^\\d+"))) |>   
+  filter(!(str_detect(word, pattern = "^(aa)|^(aaa)"))) |> 
+  filter(str_length(word)>2) |> 
+  group_by(title) |>
+  filter(n() >= 10) |>
+  ungroup()
+```
+
+```{r}
+#| echo: false
+#| output: false
+#clean up environment because it keeps crashing
+rm('ted_main','ted_trans','ted_data')
+```
+
+```{r}
+#| echo: false
+#| output: false
+nrc <- tidytext::get_sentiments("nrc") #attach sentiment
+```
+
+# Sentiment Analysis and TED Talk Popularity
+
+```{r}
+#| echo: false
+#| output: false
+# Join sentiment labels to tokenized TED words
+ted_sentiment <- ted_words %>%
+  inner_join(nrc, by = "word", relationship = "many-to-many")
+```
+
+
+```{r}
+#| echo: false
+#| output: false
+# Create positive/negative scoring system
+ted_sentiment_scores <- ted_sentiment %>%
+  mutate(sentiment_value =
+           case_when(
+             sentiment %in% c("positive", "joy", "trust",
+                              "anticipation", "surprise") ~ 1,
+             sentiment %in% c("negative", "fear", "anger",
+                              "sadness", "disgust") ~ -1,
+             TRUE ~ 0
+           ))
+```
+
+
+```{r}
+#| echo: false
+#| output: false
+# Calculate sentiment score for each TED Talk
+talk_sentiment <- ted_sentiment_scores %>%
+  group_by(title, main_speaker, views) %>%
+  summarize(
+    sentiment_score = sum(sentiment_value),
+    total_words = n(),
+    .groups = "drop"
+  )
+```
+
+
+
+```{r}
+#| echo: false
+#| output: false
+# Normalize sentiment score by transcript size
+talk_sentiment <- talk_sentiment %>%
+  mutate(
+    normalized_sentiment = sentiment_score / total_words,
+    log_views = log10(views)
+  )
+
+```
+
+```{r}
+#| echo: false
+#| output: false
+# Quick summary view
+summary(talk_sentiment)
+
+```
+
+
+```{r}
+#| echo: false
+# Visualization: TED Talk Popularity vs Sentiment
+
+ggplot(talk_sentiment,
+       aes(x = normalized_sentiment,
+           y = log_views)) +
+
+  geom_point(
+    aes(size = total_words),
+    alpha = 0.4,
+    color = "blue"
+  ) +
+
+  geom_smooth(
+    method = "lm",
+    se = TRUE,
+    color = "red",
+    linewidth = 1
+  ) +
+
+  scale_size_continuous(name = "Transcript Word Count") +
+
+  labs(
+    title = "TED Talk Popularity vs Emotional Language",
+    subtitle = "Relationship Between Sentiment and View Counts",
+    x = "Normalized Sentiment Score",
+    y = "Log10 TED Talk Views"
+  ) +
+
+  theme_minimal()
+
+```
+This visualization explores the relationship between emotional language and TED Talk popularity. Each point represents an individual TED Talk, with the x-axis displaying the normalized sentiment score and the y-axis showing the logarithm of total view counts. Point size represents transcript length, allowing larger and more detailed talks to be visually distinguished from shorter talks. The use of a logarithmic scale helps reduce the influence of extremely viral TED Talks and makes overall trends easier to interpret across the dataset.
+
+The graph suggests a slight positive relationship between emotional positivity and popularity. Talks with more optimistic or emotionally uplifting language tend to receive somewhat higher view counts on average. This trend may exist because TED audiences often seek content that is inspiring, motivational, or hopeful. Speakers who use positive emotional language may create stronger emotional connections with viewers, making their talks more memorable and more likely to be shared online. Positive talks may also encourage feelings of curiosity, empowerment, or excitement, which align closely with TED’s goal of spreading impactful ideas.
+
+However, the relationship is not especially strong, and there is substantial variation throughout the graph. Many talks with neutral or negative sentiment still achieve high view counts, suggesting that emotional positivity alone does not determine success. Other factors such as speaker reputation, storytelling ability, humor, topic relevance, production quality, and timing likely play major roles in audience engagement. For example, talks discussing serious issues such as climate change, mental health, or inequality may naturally contain more negative language while still attracting large audiences because of their social importance. Overall, the visualization suggests that emotional tone contributes to TED Talk popularity, but it is only one factor among many that influence audience engagement.
+
+# TF-IDF Analysis and Popularity Groups
+Sentiment analysis using the methods applied here can only take us so far. There are often words which do not have any sentiment in our prebuilt sentiment datasets, and furthermore we may miss important context of phrases. Because of this, we can also employ some tf_idf analysis to attempt to gain some further insights. To do this, we will further break up our TED Talks in to "popularity groups." We split the talks in to the top 10% and the bottom 40% of based on views. This allows us to perform tf_idf analysis across each group, to determine what words (or kinds of words) are most important in popular versus unpopular talks.
+
+What we have done is first treated the entire dataset as our corpus, with each TED Talk as a single document. We then calculated the tf, idf, and tf_idf score for each word across the entire corpus, and also filtered out words that only appear in one or two talks to limit these skewing our results. Next, we group by popularity group and word, and take the average tf_idf score for each group. This will give us tf_idf information about words in each popularity group, essentially giving us a rough idea of the influence of that word in both popular and unpopular talks. Finally, we consider only words that show up in both popular, and unpopular talks, and look at the difference in their tf_idf scores. The difference in average tf_idf scores for a word between popularity groups gives us an idea of the importance of that word relative to each group. A high difference tells us that that word is in some sense "more influential" in one group than the other. Using a dumbbell plot, we can plot the 20 words with the largest gaps in tf_idf scores between each group, and visualize which group that word is more important too. This is what we do below.
+```{r}
+#| echo: false
+#| output: false
+#Add tf_idf information to the tokenized dataset. Get rid of the middle popularity 
+#group. Ensure to include title, popularity_group, and word in this dataset.
+
+tf_idf_ted_words <- ted_words |> 
+  filter(popularity_group != 'Middle') |> 
+  count(title, popularity_group, word, sort = TRUE) |> 
+  tidytext::bind_tf_idf(word, title, n)
+```
+
+```{r}
+#| echo: false
+#| output: false
+#Group by popularity group and word, then find the average tf_idf for each row. 
+#This will essentially look at specific words that may exist across several talks in a popularity group, then add them. Also get rid of words that only appear in one or two talks to
+#get a better idea of words that matter the most across a popularity group
+
+group_words <- tf_idf_ted_words |> 
+  group_by(popularity_group, word) |> 
+  summarize(avg_tfidf = mean(tf_idf),appearances = n(), .groups = "drop") |> 
+  filter(appearances >= 3)
+```
+
+```{r}
+#| echo: false
+#| output: false
+# Prep the dumbbell data for a dumbell plot. We want to look at words that appear
+#across talks in both groups
+#Make each group its own column, and add a new column that is the difference between the tf_idf scores for the words across each group
+dumbbell_data <- group_words |> 
+  pivot_wider(
+    names_from = popularity_group,
+    values_from = avg_tfidf
+  ) %>%
+  drop_na() |>  # only words appearing in BOTH groups
+  mutate(diff = abs(`Most Popular` - `Least Popular`)) |> 
+  slice_max(diff, n = 20) |> 
+  mutate(word = reorder(word, diff))  # sort by gap size
+```
+
+```{r}
+#| echo: false
+#| fig-width: 6
+# Dumbbell plot
+ggplot(dumbbell_data, aes(y = word)) +
+  
+  geom_segment(
+    aes(x = `Least Popular`, xend = `Most Popular`,
+        y = word, yend = word),
+        color = "gray",
+        linewidth = 1) +
+  
+  geom_point(aes(x = `Least Popular`, color = "Unpopular"),size = 2) +
+  geom_point(aes(x = `Most Popular`, color = "Popular"), size = 2) +
+  scale_color_colorblind() +
+  
+  labs(
+    title = "Distinctive Vocabulary: Popular vs. Unpopular TED Talks",
+    subtitle = "Words ranked by difference in average TF-IDF score between groups",
+    x = "Average TF-IDF Score",
+    y = NULL,
+    color = "Popularity Group"
+  ) +
+  
+  theme_minimal() 
+
+```
+As described above, this dumbbell plot is comparing the influence of words across each group based on the tf_idf score. Each point represents the average tf_idf score for that word in that respective group. The segment between them visualizes the difference between these average scores.  A large difference in scores corresponds to a large difference in importance across groups, with a similar relationship for a small difference in scores. Here we have plotted the 20 words with the largest difference in average scores. This allows us to visualize which words carry a lot of weight in one group, and comparatively small weight in the other.
+
+The words that are the most influential in popular talks, while being less influential in unpopular talks are grit, distractions, cite, kindergarten, tenderness, roommates, illusions, psychotic, public's, ripples, and nagging. Compare these to words that are primarily influential in unpopular talks, which include hovering, placebo, hesitate, pivot, serotonin, circuitry, intergalactic, strawberry, and pixels. Despite a few outliers, it seems the words that are most influential in these less popular talks involve more technical topics. Serotonin, circuitry, intergalactic, pixels, and even placebo all appear to be words that may pop up in an academic or scholarly talk on a specific subject. For example, astrophysics for intergalactic, or psychology and neuroscience for serotonin and placebo. Several of the words that are influential in popular talks comparatively appear as though they could be things that are more broadly applied to people/communities as whole. Certainly thing like public's, kindergarten, grit, and distractions are all words that are likely being used in talks geared towards the general public, with some message that is aimed for all ears. 
+
+It must be said that these conclusions are indeed somewhat speculative. There are certainly some outliers in each group based on the categories we've roughly defined here (technical vs geared towards general audience) and furthermore some words that may seem to fit well in one of those groups could easily be a part of the other. Much additional context and analysis would be needed to make a full conclusion.
+
+# Conclusion
+
+This project used natural language processing and text analysis techniques in R to investigate patterns within TED Talk transcripts. The project explored the relationship between emotional language and popularity. While talks with more positive sentiment tended to receive somewhat higher view counts, the relationship was not strong enough to suggest that positivity alone determines success. Instead, the findings suggest that TED Talk popularity is influenced by many interacting factors including topic relevance, storytelling ability, speaker reputation, and audience interest.
+
+On top of analyzing relationship between emotional language and popularity, this project also dug a bit deeper into the use of general language across popular and less popular talks. The goal here was to try and possibly identify words, or groups/classes of words that were more influential in popular/unpopular talks, while being minimally influential in the other. The findings seem to broadly suggest something that makes logical sense - more popular talks are those that are less technical and geared more towards the general public. However, the basis of this conclusion was somewhat speculative. Additional context is certainly needed, and the analysis is limited by the techniques employed. That being said, this conclusion seems consistent with expectations, and could serve as a starting point for further analysis. 
+
+Overall, this analysis demonstrates how computational text analysis can uncover patterns that may not be obvious through casual observation alone. By combining transcript text with metadata such as views, the project highlights the value of data wrangling and visualization techniques for understanding communication, audience engagement, and public speaking trends.
+
+
+
+# References/Sources
+
+* Link to Kaggle Datasets: https://www.kaggle.com/datasets/rounakbanik/ted-talks
+
+
