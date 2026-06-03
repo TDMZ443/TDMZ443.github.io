@@ -1,0 +1,73 @@
+---
+title: rlstats package
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# rlstats
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+## Installation
+
+You can install the development version of rlstats from
+[GitHub](https://github.com/) with:
+
+``` r
+#install.packages("remotes")
+#install.packages("devtools")
+devtools::install_github("ADC-405-S26/rlstats")
+```
+
+**Note: If you're reading this on the Github source code page, there will be a lot of css jargon that it displays. Scroll past to see the table output.**
+
+## Examples
+
+This package contains three main functions. Two for analyzing a specific player, and one for comparison between teams in a match. Below you'll see usage of all three.
+
+```{r example}
+library(rlstats)
+```
+
+
+#### stats_for_player
+
+This function outputs a table with some basic summary statistics for a specified player
+
+```{r}
+stats_for_player(TDMZ443games, name = "TDMZ443")
+```
+
+If your dataset contains data from several games, the above function call will return aggregated statistics for all those games. If you want to specify a particular game, you pass in its match guid.
+
+```{r}
+stats_for_player(TDMZ443games, name = "TDMZ443", game = '8DF7C4C211F1560E0ED84EA271D83282')
+```
+
+
+#### speed_boost_plots
+
+This function returns two plots displaying boost total and speed information for a specified player throughout the course of a specified game
+
+```{r}
+speed_boost_plots(TDMZ443games, name = 'TDMZ443', game = '8DF7C4C211F1560E0ED84EA271D83282')
+```
+
+
+#### compare_teams
+
+This functions outputs a table with some summary statistics allowing comparison between the performance of both teams in specified match
+
+```{r}
+compare_teams(TDMZ443games, '8DF7C4C211F1560E0ED84EA271D83282')
+```

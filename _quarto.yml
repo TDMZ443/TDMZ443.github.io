@@ -8,10 +8,20 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
-      - capstone.qmd
-      - SqlProject.qmd
-      - TextAnalysis
+      - href: about.qmd
+        text: About Me
+      - href: capstone.qmd
+        text: My Computer Science Capstone
+      - text: My 405 Projects
+        menu:
+          - href: SqlProject.qmd
+            text: SQL Project
+          - href: TextAnalysis.qmd
+            text: "Project 3" 
+          - href: rlstatsreadme.qmd
+            text: rlstats
+          - href: Project5.qmd
+            text: Project 5
 
 format:
   html:
