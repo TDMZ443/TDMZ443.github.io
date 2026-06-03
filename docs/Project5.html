@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Project 5: A Layered Grammar of Graphics Paper Review – Tristan Zook</title>
+<title>A Layered Grammar of Graphics Paper Review – Tristan Zook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -96,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About Me</span></a>
+<span class="menu-text">My Life as a Student Athlete</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./capstone.html"> 
@@ -109,19 +109,19 @@ ul.task-list li input[type="checkbox"] {
     <ul class="dropdown-menu" aria-labelledby="nav-menu-my-405-projects">    
         <li>
     <a class="dropdown-item" href="./SqlProject.html">
- <span class="dropdown-text">SQL Project</span></a>
+ <span class="dropdown-text">Mountaneering Data Analysis with SQL</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./TextAnalysis.html">
- <span class="dropdown-text">Project 3</span></a>
+ <span class="dropdown-text">TedTalk Text Analysis</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./rlstatsreadme.html">
- <span class="dropdown-text">rlstats</span></a>
+ <span class="dropdown-text">rlstats Package</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./Project5.html">
- <span class="dropdown-text">Project 5</span></a>
+ <span class="dropdown-text">A Layered Grammar of Graphics Paper Review</span></a>
   </li>  
     </ul>
   </li>
@@ -136,15 +136,21 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#a-layered-grammar-of-graphics-summary-and-critical-analysis" id="toc-a-layered-grammar-of-graphics-summary-and-critical-analysis" class="nav-link active" data-scroll-target="#a-layered-grammar-of-graphics-summary-and-critical-analysis">A Layered Grammar of Graphics Summary and Critical Analysis</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Project 5: A Layered Grammar of Graphics Paper Review</h1>
+<h1 class="title">A Layered Grammar of Graphics Paper Review</h1>
 </div>
 
 
@@ -161,8 +167,10 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>The fifth and final project of CMSC405 involved reading, analyzing, and presenting on a Data Science paper that is foundational in the growing field. My partner Laura Henze and I chose the paper <em>A Layered Grammar of Graphics</em> written by Hadley Wickham. This paper lays the theoretical foundation for the highly influential R data visualization package ggplot2. We created both a poster presentation, as well as two individual critical analyses of this paper. Find below the link to our poster, as well as my personal critical analysis. You may need to zoom out to view the entire poster. To return to this page, simply press the back arrow in your browser, and remember to zoom back in.</p>
 <p><a href="poster.html">Our Poster</a></p>
-<p>Find below my crititcal analysis.</p>
+<section id="a-layered-grammar-of-graphics-summary-and-critical-analysis" class="level1">
+<h1>A Layered Grammar of Graphics Summary and Critical Analysis</h1>
 <p>The title of this paper is <em>A Layered Grammar of Graphics</em> written by Hadley Wickham. The central goal of Wickham in this paper was to formalize and streamline the way we produce statistical graphics digitally. This was, and continues to be, a very significant concept as people from a variety of different fields make use of software to visualize data. Having a widely recognized, and easy to use framework that can be applied to create many different kinds of graphics will serve a very large population. An earlier paper by Leland Wilkinson laid the groundwork which Wickham built off. Wilkinson proposed a “Grammar of Graphics” that broke digital graphics in to a set of building blocks, all of which were orthogonal and could be edited individually to create a graphic. This visualization framework was then implemented in its own programming language. While useful, and possibly capable of describing a wider range of graphics than Wickham’s, Wilkinson’s framework was overall verbose. It gets messy quickly and requires a lot of explicit coding to set things up. Wickham sought to not only simplify this approach, but also embed his own framework directly into an already widely used programming language - R, with the package ggplot2.</p>
 <p>Wickham took the idea of Wilkinson’s grammar, modified it slightly, and expanded upon it to create his proposed <em>layered</em> grammar of graphics. This came with a similar set of building blocks, all of which could be modified individually to create various kinds of plots. Perhaps the most foundational piece of the proposed framework was the layers. Wickham’s grammar consists of 7 main components. Data, aesthetic mappings, geometric objects, statistical transformations, scales, coordinate systems, and facets. Of these, the coordinate system, scales, and facets all act on the overall graphic as a whole. Data, aesthetic mappings, geometric objects, and statistical transformations comprise each layer. Under the pretense of this grammar, every graphic is built up of one or more layers, along with the necessary scales (while these correspond to the aesthetic mappings in each layer, but are still considered to be part of the overall graphic), coordinate system, and faceting. The exception here is one may propose default data, and aesthetic mappings which get applied to the entire plot as a whole, becoming the data and aesthetics for each layer. The grammar defined this way provides a framework for producing a wide variety of graphics. However, when implementing it in this base form we see some similar issues to that of Wilkinson’s. That is, it is very verbose and requires a lot of code, making learning and reading the syntax more complicated. To remedy this, Wickham also proposed a hierarchy of defaults. Several of the most commonly used plots, such as a scatter plot or a bar plot, can be created using ggplot2 only specifying data, aesthetics, and the geometric object. The rest (scales, stats, etc) gets filled in using Wickham’s system of defaults. This leads to simpler, and easier to learn code for widely used plots, while still maintaining the level of precision and control with the ability to override any default. This allows for a low level of entry (a biologist with minimal coding experience can easily make a plot) while also maintaining a high ceiling (a well versed coder can make creative and unique plots by explicitly defining each component). This system makes Wickham’s grammar, implemented in ggplot2, extremely powerful for a wide range of graphics and users. Additionally, it certainly proves to be a general simplification of the grammar proposed by Wilkinson.</p>
 <p>There are certainly some limitations to this grammar, some of which are acknowledged by Wickham himself in the paper. One limitation comes in the creation of area plots, such as bar charts or histograms. He states how these can be constructed using the grammar, but there is not a lot of insight into their underlying structure. This makes it difficult to create/understand useful variations. He proposes it might be useful to define “subgrammars” for different families of plots, allowing for more specific control over them. Wickham also mentions how this proposed system does not tell us how to display anything besides a dataframe. So things such as clusterings or classifications become a lot more complex. Another limitation of the base implementation is the lack of interactability. As it stood there was no way to incorporate user interactability into a ggplot2 graphic, which is desirable in many contexts. This proved to be a big gap when it came to actual usability across a wide range of fields. However there are many extensions that add on to ggplot2, several of which provides interactability. In fact all of these issues mentioned may be tackled by other users adding extentions. This idea of extensions filling the gaps may be seen as both a limitation, or a strength. For one, it is a limitation as many of these desirable functionalities require an extra extension. On the other hand, the ability to add extensions (or edit the package ggplot2 itself) provides a clear and definitive way to fill any gaps one may see in this implementation. Another limitation of the framework is the complexity. Despite the fact that it does certainly simplify things overall, and provides a concrete framework for creating graphics, there is still a learning curve. This gets especially steep when looking to create increasingly complex graphics. Some of the abstract concepts present in the framework may be difficult to beginners, and this holds especially true as you look in to editing each component manually. Overall though these limitations have not effected the real world applicability and usability of ggplot2 and the layered grammar of graphics. There is sufficient documentation and instruction for most users to understand the basics. Additionally, a lot of the limitations only show up when executing high complexity use cases for this package. The large majority of users are using ggplot2 for creating relatively well understood graphics, and one may argue that this was the primary goal for this package. If looking through that lens, the ideas from this paper implemented in ggplot2 performed very well and is still extremely useful across several scenarios despite some existing limitations.</p>
@@ -170,6 +178,7 @@ ul.task-list li input[type="checkbox"] {
 <p>My biggest conceptual takeaway really has to do with how much is happening behind the scenes with ggplot2. In particular, something I found really insightful was the hierarchy of defaults Wickham implemented. The idea of having a modular system for creating graphics, with ever component being editable creates a very powerful system. However, at face value it also creates a very complex system for a beginner user to learn. I can imagine trying to learn all the specific lines of code for each component being very difficult even for just a basic plot. Let alone memorizing all the different combinations to be able to use them in an efficient manner while working on a large project. I find the idea of implementing smart defaults based on the most widely used applications for various plots very smart. I imagine that this package would be nowhere near what it is now without this implementation of defaults. In fact, reading about this implementation made me realize something important about the design of data science tools. That is, a developer must consider who may be using their tools, and how to best suit their needs. Here Wickham is presumably developing for a very large user base. As such, there will be many novice users. This requires tools that are relatively easy to learn how to use. With the system of defaults, most novice coders can easily learn to make a large family of plots. On the flipside however, Wickham has also catered to the other side of his user base. Very experienced coders and data scientists may dive deep in to the component wise control of this grammar to create complex visualizations. This idea of providing tools that suit the needs of users across all skill levels seems to me to be a key aspect of creating a widely used tool in the world of data science. I would say this idea in and of itself connects largely to specifically my developing journey at Lawrence, and being very user conscious when creating tools, and products. I really like the idea of creating tools that are have low barrier to entry but high levels of complexity when diving deep. I will carry this idea forward in my career.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

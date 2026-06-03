@@ -12,21 +12,21 @@ about:
 
 ::: {#bio}
 Hello! My name is Tristan Zook. I am soon to graduate senior at [Lawrence University](https://www.lawrence.edu/)
-studying majoring in Math and Computer Science, with a minor in
+studying majoring in [Math](https://www.lawrence.edu/academics/college/mathematics) and [Computer Science](https://www.lawrence.edu/academics/college/computer-science), with a minor in
 Data Science and Statistics. I was born in Hawaii on the island of Oahu, and grew up
 in Duluth, Minnesota. 
 
 I enjoy working through math, computer science, and data science problems and 
-attempting to find creative solutions. Please check out some of my posted projects
+attempting to find creative solutions. Please check out my posted projects
 to see more about some problems I've worked through.
 
-Outside of academics, I participate on the Track and Field team at Lawrence,
+Outside of academics, I participate on the [Track and Field](https://vikings.lawrence.edu/sports/mens-track-and-field) team at Lawrence,
 primarily as a sprinter and jumper. I also enjoy swimming, hiking, camping and pretty 
 much any exploration of nature. I'm always on the lookout for suggestions on new places 
 to explore!
 
 ::: {#landing-icons}
-[{{< fa brands github title="github" >}}](https://github.com/TDMZ443){target="_blank"} &nbsp; [{{< fa envelope title="envelope" >}}](mailto:tristan.d.zook@lawrence.edu)
+[{{< fa brands github title="github" >}}](https://github.com/TDMZ443){target="_blank"} &nbsp; [{{< fa envelope title="envelope" >}}](mailto:tristan.d.zook@lawrence.edu) &nbsp; [{{< fa brands linkedin title="linkedin" >}}](www.linkedin.com/in/tristan-zook-34649a2b1/){target="_blank"} &nbsp;
 :::
 :::
 

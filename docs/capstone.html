@@ -35,6 +35,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -72,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -95,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About Me</span></a>
+<span class="menu-text">My Life as a Student Athlete</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./capstone.html" aria-current="page"> 
@@ -108,19 +109,19 @@ ul.task-list li input[type="checkbox"] {
     <ul class="dropdown-menu" aria-labelledby="nav-menu-my-405-projects">    
         <li>
     <a class="dropdown-item" href="./SqlProject.html">
- <span class="dropdown-text">SQL Project</span></a>
+ <span class="dropdown-text">Mountaneering Data Analysis with SQL</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./TextAnalysis.html">
- <span class="dropdown-text">Project 3</span></a>
+ <span class="dropdown-text">TedTalk Text Analysis</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./rlstatsreadme.html">
- <span class="dropdown-text">rlstats</span></a>
+ <span class="dropdown-text">rlstats Package</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./Project5.html">
- <span class="dropdown-text">Project 5</span></a>
+ <span class="dropdown-text">A Layered Grammar of Graphics Paper Review</span></a>
   </li>  
     </ul>
   </li>
@@ -135,24 +136,82 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#landing-page" id="toc-landing-page" class="nav-link active" data-scroll-target="#landing-page">Landing Page</a></li>
+  <li><a href="#admin-dashboard" id="toc-admin-dashboard" class="nav-link" data-scroll-target="#admin-dashboard">Admin Dashboard</a></li>
+  <li><a href="#office-dahsboard" id="toc-office-dahsboard" class="nav-link" data-scroll-target="#office-dahsboard">Office Dahsboard</a></li>
+  <li><a href="#overview-of-features" id="toc-overview-of-features" class="nav-link" data-scroll-target="#overview-of-features">Overview of Features</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<div class="quarto-about-jolla">
- <header id="title-block-header" class="quarto-title-block default">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Computer Science Senior Capstone</h1>
 </div>
+
+
+
 <div class="quarto-title-meta">
+
+    
+  
+    
   </div>
-</header><main class="content" id="quarto-document-content">
-<p>For my computer science senior capstone, I begun working on a small business with two partners, Jamie Vee and Aaron Stathopoylos.</p>
+  
 
 
-</main>  
-</div>
- <!-- /main -->
+</header>
+
+
+<p>For my computer science senior capstone, I begun working on a small business with two partners, Jamie Vee and Aaron Stathopoylos. Jamie is on the business side of things, and me and Aaron have been developing our product. This product is called DEMS. The goal is to build a comprehensive system for dental offices to track and manage all their equipment and equipment maintenance, from purchase through its entire lifecycle. This is currently a massive hole in the dental industry. We hope to deploy in the next several months. We do not have a live demo yet, so this page will showcase a few screenshots and explanations of features. Check back in the near future to get access to a live demo!</p>
+<p>Check out my capstone presentation slideshow <a href="https://docs.google.com/presentation/d/1MbORzKRsngcCq-gEla-RwL6T6bK70BuzDTsNcXfwPL4/edit?usp=sharing">here</a> as well.</p>
+<section id="landing-page" class="level1">
+<h1>Landing Page</h1>
+<p>This is an image of the landing page. Here you see some basic explanation of the goal of the features of the product, as well as a visible login and signup button.</p>
+<p><img src="images/landingpage.png" class="img-fluid"></p>
+</section>
+<section id="admin-dashboard" class="level1">
+<h1>Admin Dashboard</h1>
+<p>This is the admin dashboard. Here you see there is a single office account. An important feature we wanted to incorporate was for admins to be able to oversee several different office acccounts, as this is something that is commonly seen in the dental industry. Here an admin can choose from all the offices they may oversee, as well as adding new clinics under their account.</p>
+<p><img src="images/admindashboard.png" class="img-fluid"></p>
+</section>
+<section id="office-dahsboard" class="level1">
+<h1>Office Dahsboard</h1>
+<p>This is the office dashboard. Here at first glance you see a few main cards. One shows the head of the full list of equipment, along with a link for offices to view their full fleet of equipment. The next shows pending, and upcoming maintenance appointments, again along with a link to view the full list. The third showcases recently completed equipments. These links are accessible both through these cards, and in the lefthand user panel. There are also various other links for offices to view their profiles, add new equipment, etc. You may also notice a link to our AI Invoice tool. The purpose of this tool is to manually read equipment invoices, and update office records accordingly. The goal here is to save large amounts of time and labor on tedious data entry.</p>
+<p><img src="images/officedashboard.png" class="img-fluid"></p>
+</section>
+<section id="overview-of-features" class="level1">
+<h1>Overview of Features</h1>
+<p>The primary features, some of which are mentioned above, are the following</p>
+<ul>
+<li>Maintain Admin and Office accounts for clean management of single branches to chains of clinics</li>
+<li>Record and maintain comprehensive list of equipment for each office, including all pertinent details such as maintenace requirements, warranty information, neccessary parts, etc.</li>
+<li>Record and maintain comprehensive list of all pending, scheduled, and completed maintenance appointments</li>
+<li>Automated maintenance appointment scheduling. Simply record your top 2 or 3 maintenance companies, along with their contact information as a part of your office profile. Then with a simple click of a button you can send a generated email requesting a maintenance appointment for a specific piece of equipment. This cuts out on manually scheduling, allowing it to happen all in one place.</li>
+<li>AI Assistant to automate tedious data entry</li>
+</ul>
+<p>The goal here is to save time, and increase productivity by providing a simple and organized one stop shop for all dental equipment tracking needs.</p>
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

@@ -9,19 +9,19 @@ website:
       - href: index.qmd
         text: Home
       - href: about.qmd
-        text: About Me
+        text: My Life as a Student Athlete
       - href: capstone.qmd
         text: My Computer Science Capstone
       - text: My 405 Projects
         menu:
           - href: SqlProject.qmd
-            text: SQL Project
+            text: Mountaneering Data Analysis with SQL
           - href: TextAnalysis.qmd
-            text: "Project 3" 
+            text: TedTalk Text Analysis 
           - href: rlstatsreadme.qmd
-            text: rlstats
+            text: rlstats Package
           - href: Project5.qmd
-            text: Project 5
+            text: A Layered Grammar of Graphics Paper Review
 
 format:
   html:

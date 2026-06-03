@@ -1,6 +1,9 @@
 ---
-title: "Project 2"
+title: "Mountaineering Data Analysis with SQL"
 ---
+
+The second project in CMSC405 involved making use of SQL+R to design and create a relational database with at least three different datasets that could be joined with a common key, and then perform data analysis on our database. My partner Laura Henze and I chose to investigate Himalayan Mountaineering data. Find our database creation and exploration below.
+
 
 ```{r setup}
 #| message: false
@@ -15,7 +18,6 @@ library(duckdb)
 
 ```
 
-### ---------------------------------------------------------------------------
 
 # Accessing data
 
@@ -41,6 +43,8 @@ peaks <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidy
 
 ```{r}
 glimpse(peaks)
+
+# Quick check to see what the data look like
 ```
 
 ```{r}
@@ -51,10 +55,8 @@ summary(peaks)
 
 ```{r}
 glimpse(expeditions)
-```
 
-```{r}
-glimpse(expeditions)
+# Quick check to see what the data look like
 ```
 
 ```{r}
@@ -66,6 +68,8 @@ summary(expeditions)
 
 ```{r}
 glimpse(members)
+
+# Quick check to see what the data look like
 ```
 
 ```{r}
@@ -114,7 +118,7 @@ write_csv(members_clean,'members.csv')
 # Designing the database
 
 ```{sql connection=con_exp}
-
+/* making sure to drop the tables in case previous versions exist already */
 DROP TABLE IF EXISTS members;
 DROP TABLE IF EXISTS expeditions;
 DROP TABLE IF EXISTS peaks;
@@ -127,16 +131,16 @@ DROP TABLE IF EXISTS peaks;
 CREATE TABLE members (
   expedition_id VARCHAR(20) NOT NULL,
   member_id VARCHAR(30) NOT NULL,
-  sex CHAR(1) DEFAULT NULL,
-  age SMALLINT DEFAULT NULL,
-  citizenship VARCHAR(100) DEFAULT NULL,
-  expedition_role VARCHAR(100) DEFAULT NULL,
-  hired BOOLEAN DEFAULT NULL,
-  success BOOLEAN DEFAULT NULL,
-  solo BOOLEAN DEFAULT NULL,
-  oxygen_used BOOLEAN DEFAULT NULL,
-  died BOOLEAN DEFAULT NULL,
-  injured BOOLEAN DEFAULT NULL,
+  sex CHAR(1),
+  age SMALLINT,
+  citizenship VARCHAR(100),
+  expedition_role VARCHAR(100),
+  hired BOOLEAN,
+  success BOOLEAN,
+  solo BOOLEAN,
+  oxygen_used BOOLEAN,
+  died BOOLEAN,
+  injured BOOLEAN,
 
   PRIMARY KEY (member_id)
 );
@@ -149,23 +153,23 @@ CREATE TABLE members (
 CREATE TABLE expeditions (
   expedition_id VARCHAR(20) NOT NULL,
   peak_id VARCHAR(10) NOT NULL,
-  year SMALLINT DEFAULT NULL,
-  season VARCHAR(20) DEFAULT NULL,
+  year SMALLINT,
+  season VARCHAR(20),
 
-  basecamp_date DATE DEFAULT NULL,
-  highpoint_date DATE DEFAULT NULL,
-  termination_date DATE DEFAULT NULL,
+  basecamp_date DATE,
+  highpoint_date DATE,
+  termination_date DATE,
 
-  termination_reason VARCHAR(255) DEFAULT NULL,
-  highpoint_metres INT DEFAULT NULL,
+  termination_reason VARCHAR(255),
+  highpoint_metres INT,
 
-  members INT DEFAULT NULL,
-  member_deaths INT DEFAULT NULL,
-  hired_staff INT DEFAULT NULL,
-  hired_staff_deaths INT DEFAULT NULL,
+  members INT,
+  member_deaths INT,
+  hired_staff INT,
+  hired_staff_deaths INT,
 
-  oxygen_used BOOLEAN DEFAULT NULL,
-  trekking_agency VARCHAR(100) DEFAULT NULL,
+  oxygen_used BOOLEAN,
+  trekking_agency VARCHAR(100),
 
   PRIMARY KEY (expedition_id)
 );
@@ -177,13 +181,13 @@ CREATE TABLE expeditions (
 
 CREATE TABLE peaks (
   peak_id VARCHAR(10) NOT NULL,
-  peak_name VARCHAR(100) DEFAULT NULL,
-  peak_alternative_name VARCHAR(150) DEFAULT NULL,
-  height_metres INT DEFAULT NULL,
-  climbing_status VARCHAR(50) DEFAULT NULL,
-  first_ascent_year SMALLINT DEFAULT NULL,
-  first_ascent_country VARCHAR(150) DEFAULT NULL,
-  first_ascent_expedition_id VARCHAR(20) DEFAULT NULL,
+  peak_name VARCHAR(100),
+  peak_alternative_name VARCHAR(150),
+  height_metres INT,
+  climbing_status VARCHAR(50),
+  first_ascent_year SMALLINT,
+  first_ascent_country VARCHAR(150),
+  first_ascent_expedition_id VARCHAR(20),
 
   PRIMARY KEY (peak_id)
 );
@@ -231,23 +235,34 @@ DESCRIBE members;
 
 # Querying data using SQL
 
-# Laura
+# Some Interesting Tidbits
 
-Average Peak Height by Climbing Status: Compares the average heigh of peaks across different climbing status categories. 
+Average Peak Height by Climbing Status: Compares the average height of peaks across different climbing status categories. 
 ```{sql connection=con_exp}
+
+/* Calculate the average height of peaks within each climbing
+   status category. This allows us to investigate whether
+   unclimbed or restricted peaks tend to be taller or shorter
+   than peaks that have already been successfully climbed. */
+
 SELECT climbing_status, AVG(height_metres) AS avg_height
 FROM peaks
 GROUP BY climbing_status
 ORDER BY avg_height DESC;
 ```
 
-We can see that helps talled peaks are actually more likely to be climbed. This suggests that elevation may not be a key factor in difficulty. Some peaks may remain unclimbed due to factors other than height, such as accessibility or restrictions.
+We can see that helps taller peaks are actually more likely to be climbed. This suggests that elevation may not be a key factor in difficulty. Some peaks may remain unclimbed due to factors other than height, such as accessibility or restrictions.
 
 
 Success Over Time: Examines how the probability of a successful climb changes across years.
 
 ```{sql connection=con_exp}
 
+/* Calculate the proportion of climbers who successfully summited
+   each year. The SUM() counts successful climbers while COUNT(*)
+   gives the total number of climbers. Multiplying by 1.0 ensures
+   decimal division rather than integer division. */
+   
 SELECT 
   e.year,
   COUNT(*) AS total_members,
@@ -270,6 +285,11 @@ Success VS Oxygen Used: Compares the success rates of those who used supplementa
 
 ```{sql connection=con_exp}
 
+/* Compare success rates between climbers who used supplemental
+   oxygen and those who did not. Success rate is computed as the
+   number of successful climbers divided by the total climbers in
+   each oxygen-use group. */
+   
 SELECT 
   m.oxygen_used,
   COUNT(*) AS total_climbers,
@@ -290,7 +310,13 @@ This output tells us that climbers who used supplemental oxygen (oxygen_used = T
 JOIN - Top Countries Participating: Displays which countries are most involved in Himalayan expeditions. 
 
 ```{sql connection=con_exp}
-
+/* Join the members and expeditions tables to identify which
+   countries contribute the largest number of climbers to
+   Himalayan expeditions. We also count the number of distinct
+   expeditions each country has participated in to distinguish
+   between countries with many climbers on a few expeditions
+   and those with broad participation across many expeditions. */
+   
 SELECT 
   m.citizenship,
   COUNT(*) AS num_climbers,
@@ -305,14 +331,18 @@ LIMIT 10;
 ```
 This analysis shows how participation in Himalayan expeditions varies by country, highlighting which nations contribute the most climbers and how widely they are involved across expeditions. Nepal appears as the largest participator, which makes sense given the location of the Himalayas. Also, climbers from Nepal are also often guides which will also contribute to this number. 
 
-#Tristan
+# An Analysis of Impact of Hired Staff in Expeditions
 
 Get an idea of the spread of hired staff vs recreational climbers in the expeditions
 
 ```{sql connection=con_exp}
-/*Gets max, min, and mean number of members (recreational climbers) and staff
-across all expeditions*/
-
+   /* Compute summary statistics for both expedition members and
+   hired staff to understand the overall distribution of group
+   sizes. Examining the minimum, maximum, and average values
+   helps determine whether there is substantial variation across
+   expeditions and motivates further analysis of member-to-staff
+   ratios. */
+   
 SELECT 
   MAX(members) AS max_members, MIN(members) AS min_members, AVG(members) AS average_members,
   MAX(hired_staff) AS max_staff, MIN(hired_staff) AS min_staff, AVG(hired_staff) AS average_staff
@@ -320,28 +350,41 @@ SELECT
 
 ```
 
-We see a pretty big spread, so we'll probably have to dive deeper.  
+We see a pretty big spread, so we'll probably have to dive deeper. Lets ignore those that have zero members (as this would be staff only). 
 
-Check what peaks have the lowest average member to staff ratio for expeditions. We will have to exclude expeditions with 0 members or 0 staff to get
-a meaningful result. We will check a count how many of these there are after to get
-an idea of how much of the data we're excluding
+Check what peaks have the highest average member to staff ratio for expeditions. We will have to exclude expeditions with 0 members or 0 staff to get
+a meaningful result. We will check a count how many of these there are too to get
+an idea of how much we're missing
 
 ```{sql connection=con_exp}
 
+/* Calculate the average climber-to-staff ratio for each peak
+   across all recorded expeditions. This ratio provides insight
+   into the level of support available to climbers, with larger
+   values indicating fewer hired staff relative to the number of
+   recreational climbers. Expeditions with zero members or zero
+   staff are excluded to avoid undefined ratios and ensure that
+   comparisons are meaningful. */
+   
 SELECT p.peak_name, AVG(e.members * 1.0 / e.hired_staff) AS member_staff_ratio
 FROM expeditions e
 JOIN peaks p
   ON e.peak_id = p.peak_id
 WHERE members != 0 AND hired_staff != 0
 GROUP BY p.peak_name
-ORDER BY member_staff_ratio 
+ORDER BY member_staff_ratio DESC
 
 ```
-We have around 10,000 rows total, so the above query only acts on about 63% of our data. I still think this is enough to produce some interesting results
+We have around 10,000 rows, so the above query only acts on about 70% of our data. I still think this is enough to produce some interesting results
 ```{sql connection=con_exp}
-/* Check how many expeditions had no staff or no recreational members. This is the number
-of data points excluded in our above query*/
 
+/* Count the number of expeditions that have either zero members
+   or zero hired staff. These records were excluded from the
+   member-to-staff ratio analysis because the ratio would be
+   undefined or not meaningful. This count helps quantify how
+   much of the dataset is being removed and assess whether the
+   exclusion could impact the results. */
+   
 SELECT count(*) as count
 FROM expeditions 
 WHERE members = 0 OR hired_staff = 0
@@ -350,6 +393,15 @@ WHERE members = 0 OR hired_staff = 0
 Let's look a bit closer now at success rates. We will exclude the same rows we excluded above to stay consistent
 
 ```{sql connection=con_exp}
+
+/* Calculate the expedition success rate for each peak by dividing
+   the number of successful expeditions by the total number of
+   expeditions recorded for that peak. An expedition is considered
+   successful if its termination reason contains the word "Success".
+   Expeditions with zero members or zero hired staff are excluded
+   to remain consistent with the earlier member-to-staff ratio
+   analysis and allow for meaningful comparisons between peaks. */
+   
   SELECT
     p.peak_name,
     SUM(CASE WHEN e.termination_reason LIKE '%Success%' THEN 1 ELSE 0 END) * 1.0 /
@@ -362,10 +414,17 @@ Let's look a bit closer now at success rates. We will exclude the same rows we e
   ORDER BY success_rate DESC
 ```
 Seems like a lot of them are 1 or 0. This could mean there are only a few (or one) expeditions.
-We will still use this for plotting, as it might be interesting to see how the member/staff ratio looks for some of these. But for interest sake lets filter these 1's and 0's out to see the variation besides these cases.
+We will still use this for plotting, it might be interested to see how the member/staff ratio looks for some of these, but for interest sake lets filter these 1's and 0's out to see what the middle looks like.
 
 ```{sql connection=con_exp}
-/*Use above query as a subquery, then select all where the success rate is not 0 or 1*/
+
+/* Filter the peak-level success rates to exclude peaks with
+   perfect (100%) or zero success rates. Many of these extreme
+   values may result from peaks with only a small number of
+   recorded expeditions, making them less informative for
+   identifying trends. Focusing on peaks with intermediate
+   success rates provides a clearer picture of how expedition
+   outcomes vary across more frequently climbed peaks. */
 
 SELECT *
 FROM (
@@ -380,7 +439,7 @@ FROM (
   GROUP BY p.peak_name
 ) t
 WHERE success_rate NOT IN (0, 1)
-ORDER BY success_rate;
+ORDER BY success_rate DESC;
 
 
 ```
@@ -389,15 +448,18 @@ ORDER BY success_rate;
 
 ### ---------------------------------------------------------------------------
 
-# Creating data visualizations
+# Some Interesting Visualizations
 
-#Laura
 
 Death Rate of Himalayan Climbers Over Time: Shows how the death rate of Himalayan climbers has changed over the years. 
 
 ```{sql connection=con_exp}
 
-/*Query to obtain the death rate of number of climbers for each year*/
+/* Compute annual death rates by treating TRUE deaths as 1 and
+   FALSE deaths as 0. The average therefore represents the
+   proportion of climbers who died in a given year. We exclude
+   years with fewer than 50 climbers to reduce noise from very
+   small sample sizes. */
 
 SELECT 
   e.year,
@@ -413,8 +475,9 @@ ORDER BY e.year;
 ```
 
 ```{r}
-# entering previous sql code into r in order to run data visualization with 
-# ggplot
+# Execute the SQL query and store the results in an R data frame.
+# This allows us to move from database analysis to visualization
+# and further processing in R.
 
 death_trend_data <- dbGetQuery(con_exp, "
 SELECT 
@@ -433,8 +496,10 @@ ORDER BY e.year
 ```
 
 ```{r}
-# plotting data using ggplot with minimal aesthetics for increased simplicity 
-# and understanding
+# Visualize how annual death rates have changed over time.
+# The smooth trend line helps identify long-term patterns
+# that may not be obvious from year-to-year variation.
+
 ggplot(death_trend_data, aes(x = year, y = death_rate)) +
   geom_line() +
   geom_smooth(se = FALSE) +
@@ -449,16 +514,15 @@ ggplot(death_trend_data, aes(x = year, y = death_rate)) +
 By plotting the proportion of climbers who died each year, we can see that the death rate has steadily declined since 1970, which makes sense as there has been upgrades to technology as well as more guides present on these expeditions. The data increases steadily at the start which makes sense given the smaller number of climbers in the beginning years as well as the lack of knowledge of the climb. 
 
 
-#Tristan
 
-#Success Rate vs Member to Staff ratio
+# Continuation of Hired Staff Impact Analysis
 
-My interest here is to see if there is any negative correlation between these two variables. 
+My interest here is to see if there is any positive correlation between these two. 
 I expect that there will be some, but not extremely strong, as what really matters
-is the difficulty of the peak, the experience of the people, etc. But presumably more professional staff members present should result in more success. So I'm imagining that 
-a smaller member to staff ratio (meaning less members per staff) should result in more success
+is the difficulty of the peak, the experience of the people, etc. But presumably more professional staff members should result in more success.
 
 ```{sql connection=con_exp}
+
 /*Query to get both the success rate and the member-staff ratio for all peaks 
 without 100% or 0% success rate*/
 
@@ -476,7 +540,10 @@ without 100% or 0% success rate*/
 ```
 
 ```{r}
-#Convert the result of the above query into a data.frame
+
+# Execute the SQL query and store the results in an R data frame.
+# This allows us to move from database analysis to visualization
+# and further processing in R.
 
 success_rate_member_ratio_data <- dbGetQuery(con_exp, "
 SELECT
@@ -493,7 +560,11 @@ SELECT
 ```
 
 ```{r}
-#Plot our variables of interest from our convereted data.frame
+
+# Visualize the relationship between staff support and
+# expedition success. If peaks with lower climber-to-staff
+# ratios tend to have higher success rates, we would expect
+# to see a positive trend in the data.
 
 ggplot(success_rate_member_ratio_data, aes(x = member_staff_ratio, y = success_rate)) +
   geom_point() +
@@ -506,9 +577,11 @@ labs(
   theme_minimal()
 ```
 
-Check out filtered version too
-
 ```{r}
+
+# Transfer the filtered SQL results into R for visualization.
+# Peaks with success rates of exactly 0% or 100% are excluded
+# so the analysis can focus on peaks with more variation in outcomes.
 
 success_rate_member_ratio_data_filtered <- dbGetQuery(con_exp, "
  SELECT * FROM
@@ -529,6 +602,11 @@ WHERE success_rate NOT IN (0, 1)
 ```
 
 ```{r}
+
+# Visualize the relationship between climber-to-staff ratio and
+# success rate after removing peaks with 0% and 100% success rates.
+# This helps reveal trends that may be obscured by extreme values.
+
 ggplot(success_rate_member_ratio_data_filtered, aes(x = member_staff_ratio, y = success_rate)) +
   geom_point() +
   geom_smooth(se = FALSE)+
@@ -540,7 +618,8 @@ labs(
   theme_minimal()
 ```
 
-There isn't too much correlation evident in these plots. If there is, it seems to actually be slightly positive. We do see many more 100% succesful expeditions with higher member to staff ratios, so these expeditions were succesful even with less staff. Overall it seems that the most important characteristics are likely things like the peak difficulty, the experience of the climbers, etc. This calculation I have done here is far too broad it seems to capture anything meaningful. I would like maybe to dive deeper on my own and see if I can discover some more about this dataset.
+Unfiltered version seems to suggest there may be a small correlation. We do see more 100% success rates with higher ratios. However when we glance at the filtered version, it seems like there is less of one (though there may be something small). But overall I imagine other factors like experience, and peak difficulty matter the most.
+
 ### ---------------------------------------------------------------------------
 
 ```{r}
@@ -549,15 +628,5 @@ There isn't too much correlation evident in these plots. If there is, it seems t
 DBI::dbDisconnect(con_exp, shutdown = TRUE)
 
 ```
-
-# Sources
-
--   web link/document title/LLM prompt
-
--   web link/document title/LLM prompt
-
--   web link/document title/LLM prompt
-
--   add more if needed
 
 ### ---------------------------------------------------------------------------

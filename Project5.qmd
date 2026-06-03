@@ -1,13 +1,12 @@
 ---
-title: "Project 5: A Layered Grammar of Graphics Paper Review"
+title: "A Layered Grammar of Graphics Paper Review"
 ---
+
+The fifth and final project of CMSC405 involved reading, analyzing, and presenting on a Data Science paper that is foundational in the growing field. My partner Laura Henze and I chose the paper *A Layered Grammar of Graphics* written by Hadley Wickham. This paper lays the theoretical foundation for the highly influential R data visualization package ggplot2. We created both a poster presentation, as well as two individual critical analyses of this paper. Find below the link to our poster, as well as my personal critical analysis. You may need to zoom out to view the entire poster. To return to this page, simply press the back arrow in your browser, and remember to zoom back in.
 
 [Our Poster](poster.html)
 
-Find below my crititcal analysis.
-
-
-
+# A Layered Grammar of Graphics Summary and Critical Analysis
 
 The title of this paper is *A Layered Grammar of Graphics* written by Hadley Wickham. The central goal of Wickham in this paper was to formalize and streamline the way we produce statistical graphics digitally. This was, and continues to be, a very significant concept as people from a variety of different fields make use of software to visualize data. Having a widely recognized, and easy to use framework that can be applied to create many different kinds of graphics will serve a very large population. An earlier paper by Leland Wilkinson laid the groundwork which Wickham built off. Wilkinson proposed a "Grammar of Graphics" that broke digital graphics in to a set of building blocks, all of which were orthogonal and could be edited individually to create a graphic. This visualization framework was then implemented in its own programming language. While useful, and possibly capable of describing a wider range of graphics than Wickham's, Wilkinson's framework was overall verbose. It gets messy quickly and requires a lot of explicit coding to set things up. Wickham sought to not only simplify this approach, but also embed his own framework directly into an already widely used programming language - R, with the package ggplot2. 
 

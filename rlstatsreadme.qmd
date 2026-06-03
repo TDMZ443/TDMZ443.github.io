@@ -1,6 +1,8 @@
 ---
-title: rlstats package
+title: rlstats Package
 ---
+
+The fourth project in CSMC405 involved creating an R package. The focus of this package was open ended, and could be geared towards anything we wanted to choose. I decided to create an R package to analyze gameplay data from the video game Rocket League. Find below some examples of the three functions contained in my package. For full details on my package, check out the [package website](https://adc-405-s26.github.io/rlstats/). You can also find the source code for this package [here](https://github.com/ADC-405-S26/rlstats).
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
