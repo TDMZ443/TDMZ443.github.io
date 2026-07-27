@@ -1,2 +1,2 @@
 # TDMZ443.github.io
-Files for personal website
+Personal Website Repo for CMSC 405. Features class projects and some info about me
