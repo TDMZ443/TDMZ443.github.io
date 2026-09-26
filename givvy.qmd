@@ -1,0 +1,13 @@
+# Givvy — Spring Boot Item Exchange Platform
+
+A fully functional Spring Boot backend built with JPA, developed collaboratively as part of a Backend Programming course. Givvy is a community exchange platform that lets users create accounts, post items for donation, express interest in available items, and coordinate exchange appointments between donors and recipients.
+
+## My Contributions
+
+I owned the features that drive the core exchange workflow:
+
+- **Interest & offer matching** — the logic allowing users to express interest in items and donors to offer items, forming the matches that power exchanges.
+- **Dynamic appointment scheduling** — a flexible system for coordinating exchange appointments between parties.
+- **End-to-end testing** — a thorough test suite covering these workflows from request to persistence, validating the full behavior of the features I built.
+
+Check out the repo [here](https://github.com/TDMZ443/Givvy-JPA)

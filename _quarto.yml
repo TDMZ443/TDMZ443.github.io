@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - files/*.pdf
 
 website:
   title: "Tristan Zook"
@@ -10,10 +12,20 @@ website:
         text: Home
       - href: about.qmd
         text: My Life as a Student Athlete
-      - href: capstone.qmd
-        text: My Computer Science Capstone
-      - text: My 405 Projects
+      - text: Computer Science Projects  
+        menu: 
+          - href: capstone.qmd
+            text: My Computer Science Capstone
+          - href: givvy.qmd
+            text: "Givvy: A Charity Donation Web Application Backend"
+      - text: Data Science/Statistics Projects
         menu:
+          - href: BikeShare.qmd
+            text: Machine Learning Bike Share Data Analysis Technical Report
+          - href: BikeShareReport.qmd
+            text: Machine Learning Bike Share Data Analysis Non-Technical Presentation
+          - href: AmazonLegoDataAnalysis.qmd
+            text: Amazon Lego Statistical Modeling
           - href: SqlProject.qmd
             text: Mountaneering Data Analysis with SQL
           - href: TextAnalysis.qmd
@@ -22,6 +34,16 @@ website:
             text: rlstats Package
           - href: Project5.qmd
             text: A Layered Grammar of Graphics Paper Review
+      - text: Mathematics Projects
+        menu: 
+          - href: probexp.qmd
+            text: Probability Scenario Simulation and Analysis
+          - href: mathcapstone.qmd
+            text: My Mathematics Capstone
+          - href: mbp.qmd
+            text: The Mighty Big Problem
+
+
 
 format:
   html:

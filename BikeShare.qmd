@@ -1,0 +1,433 @@
+---
+title: "Analyzing the DC BikeShare System"
+author: "Irene Yank and Tristan Zook"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+```
+
+```{r, include=FALSE, warning=FALSE, message=FALSE}
+# to install additional packages, remove # and run following (you need to install a package only once)
+# install.packages("package name")
+```
+
+```{r, include=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(GGally)
+library(caret)
+library(recipes)
+library(rsample)
+library(rpart)
+library(rpart.plot)
+library(ranger)
+library(e1071)
+library(gbm)
+library(kernlab)
+library(pROC)
+library(vip)
+library(factoextra)
+library(glmnet)
+library(vip)
+library(knitr)
+library(kableExtra)
+```
+
+::: {.callout-note}
+This technical report is accompanied by a [plain-language report](BikeShareReport.qmd) written to theoretical shareholders.
+:::
+
+## Introduction
+
+We are investigating the bike sharing data set, which includes data on the Capital Bikeshare System, a bike rental service in Washington D.C. The main variable of interest in this data set is count, which represents the total number of bikes rented in a given day (There is also hourly data available, though daily data is used for the purpose of this project). After setting up feature engineering, we build and analyze several models and utilize cross validation to evaluate and compare the models. Once the optimal model is chosen, it is then used on the test set and further evaluated for its performance.
+
+## Data
+
+```{r}
+# loading data
+bike <- read.csv("day.csv")
+
+# minor data cleaning
+bike <- bike %>% 
+    select(!c(instant,dteday, registered, casual,yr))
+
+bike$weekday <- as.character(bike$weekday)
+bike$season <- as.character(bike$season)
+bike$mnth <- as.character(bike$mnth)
+
+# task: predict 'cnt' (bike count) using necessary features
+```
+
+Our data comes from the UC Davis Machine Learning Repository and has 731 observations (2 years worth of data). Some features included the season, month, and different weather observations. All features used, along with their description and units if applicable are listed below:
+
+```{r, include=FALSE}
+vars <- read.csv("varz.csv")
+
+vars <- vars %>%
+  filter(!Variable.Name %in% c("instant", "dteday", "year", "casual", "registered", "hr"))
+```
+
+```{r, echo = FALSE}
+kable(vars, format = "html", col.names = c("Variable Name", "Role", "Description", "Units")) %>%
+  kable_styling("bordered", full_width = FALSE)
+```
+
+
+```{r}
+set.seed(208)
+
+# data exploration
+
+glimpse(bike)
+
+# numerical features: temp, atemp, hum, windspeed
+  # step_normalize
+
+# holiday and workingday are both categorical but already dummy encoded (1 indicates is is that type of day, 0 otherwise)
+
+# weekday, month, and season are non-ordinal and categorical
+  # step_dummy
+
+# weathersit is ordinal -> 1 = clear, 2 = few clouds, 3 = partly cloudy, so it has already been step_integered for us
+```
+
+```{r}
+sum(is.na(bike))
+# no NA values
+```
+
+*Feature Engineering*
+
+```{r}
+set.seed(208)
+
+# data splitting
+
+data_split <- initial_split(data = bike, prop = 0.8)
+
+bike_train <- training(data_split)  
+
+bike_test <- testing(data_split)
+```
+
+```{r}
+set.seed(208)
+
+nearZeroVar(bike_train, saveMetrics = TRUE) 
+
+# holiday is nzv, which should make sense there aren't a ton of holidays, still seems like it could be an important feature to include
+```
+
+```{r}
+set.seed(208)
+
+# feature engineering (full)
+
+bike_recipe <- recipe(formula = cnt ~., data = bike_train)
+
+bike_blueprint <- bike_recipe %>%    
+  step_normalize(temp, atemp, hum, windspeed) %>%
+  step_dummy(weekday, mnth, season, one_hot = FALSE)                
+
+bike_prepare <- prep(bike_blueprint, data = bike_train)    
+
+bike_baked_train <- bake(bike_prepare, new_data = bike_train)   
+
+bike_baked_test <- bake(bike_prepare, new_data = bike_test) 
+```
+
+```{r}
+# check baked dataset 
+
+glimpse(bike_baked_train)
+
+summary(bike_baked_train)
+```
+
+*Minimal Feature Engineering*
+
+```{r}
+set.seed(208)
+
+# feature engineering (minimal)
+
+bike_recipe <- recipe(formula = cnt ~., data = bike_train)
+
+bike_blueprint_min <- bike_recipe               
+
+bike_prepare_min <- prep(bike_blueprint_min, data = bike_train)    
+
+bike_baked_train_min <- bake(bike_prepare_min, new_data = bike_train)   
+
+bike_baked_test_min <- bake(bike_prepare_min, new_data = bike_test) 
+```
+
+## Analysis/Methodology
+
+We did some initial data exploration, looking in to the types of variables present, ranges of values for variables, any missing entries, etc. There were some variables we decided to remove from our dataset prior to model building for a number of reasons. For example, we removed the yr and date variables as these do not provide any helpful information for future predictions, and we would not want them influencing our model. We found no missing entries in the variables we will use. The only feature engineering we found it necessary to implement was normalizing numeric predictors and dummy encoding categorical predictors. We also created a minimal FE blueprint with no feature engineering to test applicable models on this as well. We considered an 80-20 split for splitting our data and creating training and test sets.
+
+This is a supervised, regression problem so a logistic regression would not make sense to use in this case. Instead, we will build and compare the following models:
+
+* Linear Regression
+* KNN
+* Single Tree
+* Random Forest
+* Boosted Trees
+
+All of these models besides KNN will be built on both the full feature engineered training data, as well as the minimal FE data. Minimal feature engineering only includes imputing missing values, and since we have none of those, the models will simply be trained and tested on the original training and test sets. All models will be trained and compared using the CV process to tune hyperparameters and obtain test predictions for accuracy. 
+
+```{r}
+# CV specifications
+
+set.seed(208)
+
+cv_specs_bike <- trainControl(method = "repeatedcv",    # CV method
+                         number = 5,              # number of folds
+                         repeats = 1)              # number of repeats
+```
+
+```{r}
+# for KNN
+
+k_grid_bike <- expand.grid(k = seq(1, 51, by = 10))  
+```
+
+```{r}
+# for random forests
+
+param_grid_rf_bike <- expand.grid(mtry = seq(1, 10, 1),    
+                                   splitrule = "variance",
+                                   min.node.size = 2)  
+```
+
+```{r}
+set.seed(208)
+
+# linear (full FE)
+
+lm_cv_bike <- train(bike_blueprint,
+                         data = bike_train,
+                         method = "lm",
+                         trControl = cv_specs_bike,
+                         metric = "RMSE")
+```
+
+```{r}
+set.seed(208)
+
+# linear (min FE)
+
+lm_cv_bike_min <- train(bike_blueprint_min,
+                         data = bike_train,
+                         method = "lm",
+                         trControl = cv_specs_bike,
+                         metric = "RMSE")
+```
+
+```{r}
+set.seed(208)
+
+# KNN 
+
+knn_cv_bike <- train(bike_blueprint,
+                data = bike_train, 
+                method = "knn",
+                trControl = cv_specs_bike,
+                tuneGrid = k_grid_bike,
+                metric = "RMSE")
+```
+
+```{r}
+set.seed(208)
+
+# tree (full FE)
+
+tree_cv_bike <- train(bike_blueprint,
+                        data = bike_train,
+                        method = "rpart",  
+                        trControl = cv_specs_bike,
+                        tuneLength = 20,                   
+                        metric = "RMSE")
+```
+
+```{r}
+set.seed(208)
+
+# tree (min FE)
+
+tree_cv_bike_min <- train(bike_blueprint_min,
+                        data = bike_train,
+                        method = "rpart",  
+                        trControl = cv_specs_bike,
+                        tuneLength = 20,                   
+                        metric = "RMSE")
+```
+
+```{r}
+set.seed(208)
+
+# random forest (full FE)
+
+rf_cv_bike <- train(bike_blueprint,
+               data = bike_train,
+               method = "ranger",
+               trControl = cv_specs_bike,
+               tuneGrid = param_grid_rf_bike,
+               metric = "RMSE")
+```
+
+```{r}
+set.seed(208)
+
+# random forest (min FE)
+
+rf_cv_bike_min <- train(bike_blueprint_min,
+               data = bike_train,
+               method = "ranger",
+               trControl = cv_specs_bike,
+               tuneGrid = param_grid_rf_bike,
+               metric = "RMSE")
+```
+
+```{r}
+set.seed(208)
+
+# gradient boosting (full FE)
+
+out_bike <- capture.output(
+  gbm_cv_bike <- train(bike_blueprint,
+                  data = bike_train,
+                  method = "gbm",  
+                  trControl = cv_specs_bike,
+                  tuneLength = 5,
+                  metric = "RMSE"))
+```
+
+```{r}
+set.seed(208)
+
+# gradient boosting (min FE) 
+
+out_bike_min <- capture.output(
+  gbm_cv_bike_min <- train(bike_blueprint_min,
+                  data = bike_train,
+                  method = "gbm",  
+                  trControl = cv_specs_bike,
+                  tuneLength = 5,
+                  metric = "RMSE"))
+
+```
+
+### CV Results
+
+*RMSE*
+
+```{r}
+set.seed(208)
+
+# optimal RMSE
+
+min(lm_cv_bike$results$RMSE)
+min(lm_cv_bike_min$results$RMSE)
+min(knn_cv_bike$results$RMSE)
+min(tree_cv_bike$results$RMSE)
+min(tree_cv_bike_min$results$RMSE)
+min(rf_cv_bike$results$RMSE)
+min(rf_cv_bike_min$results$RMSE)
+min(gbm_cv_bike$results$RMSE)
+min(gbm_cv_bike_min$results$RMSE)
+```
+
+*RMSE SD*
+
+```{r}
+set.seed(208)
+
+# RMSESD
+
+lm_cv_bike$results$RMSESD[which.min(lm_cv_bike$results$RMSE)]
+lm_cv_bike_min$results$RMSESD[which.min(lm_cv_bike_min$results$RMSE)]
+knn_cv_bike$results$RMSESD[which.min(knn_cv_bike$results$RMSE)]
+tree_cv_bike$results$RMSESD[which.min(tree_cv_bike$results$RMSE)]
+tree_cv_bike_min$results$RMSESD[which.min(tree_cv_bike_min$results$RMSE)]
+rf_cv_bike$results$RMSESD[which.min(rf_cv_bike$results$RMSE)]
+rf_cv_bike_min$results$RMSESD[which.min(rf_cv_bike_min$results$RMSE)]
+gbm_cv_bike$results$RMSESD[which.min(gbm_cv_bike$results$RMSE)]
+gbm_cv_bike_min$results$RMSESD[which.min(gbm_cv_bike_min$results$RMSE)]
+```
+
+*Optimal Parameters*
+
+```{r}
+set.seed(208)
+
+# best tune 
+
+knn_cv_bike$bestTune
+tree_cv_bike$bestTune
+tree_cv_bike_min$bestTune
+rf_cv_bike$bestTune
+rf_cv_bike_min$bestTune
+gbm_cv_bike$bestTune
+gbm_cv_bike_min$bestTune
+```
+
+
+## Results
+
+The following table gives the concise results of our CV: 
+
+
+| Technique                   | RMSE      | RMSE SD   | Optimal Parameters       |
+|-----------------------------|-----------|-----------|--------------------------|
+| LM (Full FE)                | 1353.256  | 66.96529  | -                        |
+| LM (Min FE)                 | 1353.256  | 66.96529  | -                        |
+| KNN (Full FE)               | 1259.461  | 66.39121  | k = 21                   |
+| Tree (Full FE)              | 1393.776  | 108.2552  | cp = 0.00976             |
+| Tree (Min FE)               | 1399.762  | 108.4535  | cp = 0.0145              |
+| Random Forest (Full FE)     | 1246.416  | 73.35131  | mtry = 6                 |
+| Random Forest (Min FE)      | 1239.478  | 62.84000  | mtry = 3                 |
+| Gradient Boosting (Full FE) | 1255.566  | 70.53906  | 100 - 2 - 0.1 - 10       |
+| Gradient Boosting (Min FE)  | 1348.092  | 74.03074  | 250 - 1 - 0.1 - 10       |
+
+The Random Forest with minimal FE has the lowest training loss at 1239.478, along with the lowest RMSE SD at 62.84. Not only does it seem to provide a good fit for the data, but it does not come at the cost of increased variability. For these reasons, we chose this model as the final model to use on the test set and for future data. 
+
+*Final Model*
+
+```{r}
+set.seed(208)
+
+# Random Forest (Min FE) is our optimal model in training. We train it here and report test RMSE.
+
+final_model_bike <- ranger(formula = cnt ~ .,
+                      data = bike_baked_train_min,
+                      num.trees = 500,
+                      mtry = rf_cv_bike_min$bestTune$mtry,
+                      splitrule = "variance",
+                      min.node.size = 2,
+                      importance = "impurity")
+
+final_model_preds_bike <- predict(object = final_model_bike, data = bike_baked_test_min, type = "response")  
+
+sqrt(mean((final_model_preds_bike$predictions - bike_baked_test_min$cnt)^2))
+
+# if implemented on a new dataset, we are likely to see an error around 1159.892
+```
+
+```{r}
+# check VIPs
+set.seed(208)
+
+vip(final_model_bike, num_features = 10)
+
+# The top 3 VIP's are temp, atemp, and humidity. These seem to make sense logically, and we can maybe assume correlation ourselves. For example, warmer weather most likely correlates with more bikes rented. However, our model cannot tell us the nature of the specific relationship between these variables and our response of count. 
+```
+
+
+## Conclusion
+After performing cross validation to tune hyperparameters and compare training performance across all tested models, we found the optimal model to be the random forested implemented with minimal FE, and mtry=3. On the training set, this model yielded an RMSE of 1240 and RMSESD of 63. When training the final model, and using it to predict on our test set, we found an RMSE of around 1160. 
+
+When checking our VIP's, we see the variables that influence our predictions the most are temperature, average temperature, and humidity. These may be expected. However, our model cannot give us any additional information about specifically how these variables influence prediction.
+
+The random forest with minimal FE seems to be the optimal model on all accounts. Any others that are close to its performance would not add any additional interpretability, usefulness, or reduction in computation power. If we were looking for more interpretability or less resources used, we could perhaps train the linear model with no feature engineering. While this did perform outright worse than the random forest, its interpretability and minmimal computation power needed could make it useful in application.  

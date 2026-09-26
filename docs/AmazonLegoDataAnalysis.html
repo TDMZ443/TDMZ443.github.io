@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tristan Zook">
+
+<title>amazonlegodataanalysis – Tristan Zook</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-445b8638c3d06994fee0907d791121c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Tristan Zook</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">My Life as a Student Athlete</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-computer-science-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Computer Science Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-computer-science-projects">    
+        <li>
+    <a class="dropdown-item" href="./capstone.html">
+ <span class="dropdown-text">My Computer Science Capstone</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./givvy.html">
+ <span class="dropdown-text">Givvy: A Charity Donation Web Application Backend</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data-sciencestatistics-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Data Science/Statistics Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-data-sciencestatistics-projects">    
+        <li>
+    <a class="dropdown-item" href="./BikeShare.html">
+ <span class="dropdown-text">Machine Learning Bike Share Data Analysis Technical Report</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./BikeShareReport.html">
+ <span class="dropdown-text">Machine Learning Bike Share Data Analysis Non-Technical Presentation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./AmazonLegoDataAnalysis.html">
+ <span class="dropdown-text">Amazon Lego Statistical Modeling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./SqlProject.html">
+ <span class="dropdown-text">Mountaneering Data Analysis with SQL</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./TextAnalysis.html">
+ <span class="dropdown-text">TedTalk Text Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./rlstatsreadme.html">
+ <span class="dropdown-text">rlstats Package</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Project5.html">
+ <span class="dropdown-text">A Layered Grammar of Graphics Paper Review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-mathematics-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Mathematics Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-mathematics-projects">    
+        <li>
+    <a class="dropdown-item" href="./probexp.html">
+ <span class="dropdown-text">Probability Scenario Simulation and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mathcapstone.html">
+ <span class="dropdown-text">My Mathematics Capstone</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mbp.html">
+ <span class="dropdown-text">The Mighty Big Problem</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#models" id="toc-models" class="nav-link" data-scroll-target="#models">Models</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Tristan Zook </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>To many, Lego sets are merely a plaything for children. However, as with many “toy” items there is an avid community of adult Lego enjoyers. Whether this is purely to build, or to collect a wide variety of sets, there are plenty of people around the world interested in purchasing Lego sets. And with buyers, there are sellers. Many recognize this demand for Legos, and are in the market for buying and reselling. One platform that is often used for individuals to sell Lego sets to others is Amazon. We have access to a large dataset of various Lego sets, containing a variety of information, including listed Amazon prices for these sets. In this report, we will be attempting to build a model that predicts a Lego sets Amazon price based on specific factors about the Lego set. Or at least to understand how each factor of a lego set may contribute to its value. This could be helpful for any and all who are looking to resell Lego sets, whether they are seasoned or first time sellers. In building our model, we will be ignoring the original listed price for each set, imagining that we as resellers will not have this information when attempting to sell a Lego set. We can then compare our final model to a model using only the original listed price (assuming this should be the strongest indication of Amazon price) to see how well are developed model works.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>We are working here with the Legos dataset, attempting to predict the Amazon price. This dataset includes a number of predictors, including the number of pieces in the set, the number of unique pieces in the set, the number of minifigures in the set, the theme, the size, and a few others. We’re going to perform some exploratory data analysis to determine which variables may be best to try and model Amazon price. We’ll look for 1-3 predictors here to build a handful of models to compare between.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>              item_number      pieces       price amazon_price        year
+item_number    1.00000000  0.01007946  0.03442172   0.02750549  0.08146679
+pieces         0.01007946  1.00000000  0.89322037   0.80588579 -0.01509377
+price          0.03442172  0.89322037  1.00000000   0.89020469 -0.03491953
+amazon_price   0.02750549  0.80588579  0.89020469   1.00000000 -0.22494992
+year           0.08146679 -0.01509377 -0.03491953  -0.22494992  1.00000000
+minifigures    0.30334281  0.37652307  0.40947381   0.41099693 -0.05583152
+unique_pieces  0.16480493  0.74329656  0.74940512   0.71344252 -0.04002773
+              minifigures unique_pieces
+item_number    0.30334281    0.16480493
+pieces         0.37652307    0.74329656
+price          0.40947381    0.74940512
+amazon_price   0.41099693    0.71344252
+year          -0.05583152   -0.04002773
+minifigures    1.00000000    0.64005608
+unique_pieces  0.64005608    1.00000000</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="480"></p>
+<figcaption>Price vs Amazon Price</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="480"></p>
+<figcaption>Amazon Price vs Unique Pieces</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="480"></p>
+<figcaption>Amazon Price vs Number of Pieces</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="480"></p>
+<figcaption>Distribution of Amazon Price by Size</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking out theme, there seems to be a lot of variation here. However, there </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#is also a whole lot of themes. Lets maybe do something fun and ask</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#chatgpt to group these themes in to 5-6 broad categories, and see</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#what these can do as a predictor</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>Legos_grouped_price_summary <span class="ot">&lt;-</span> Legos <span class="sc">|&gt;</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(theme) <span class="sc">|&gt;</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_price =</span> <span class="fu">mean</span>(amazon_price, <span class="at">na.rm=</span><span class="cn">TRUE</span>), </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">median_price =</span> <span class="fu">median</span>(amazon_price, <span class="at">na.rm=</span><span class="cn">TRUE</span>), </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_price =</span> <span class="fu">sd</span>(amazon_price, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">number_of_sets =</span> <span class="fu">n</span>()) </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>Legos_grouped_price_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 35 × 5
+   theme          mean_price median_price sd_price number_of_sets
+   &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;          &lt;int&gt;
+ 1 Architecture        71.9         60.0     23.3              11
+ 2 Batman™             40.6         37.0     21.5              14
+ 3 BrickHeadz          46.4         41.9     26.8              14
+ 4 City                52.4         32.0     51.7              88
+ 5 Classic             26.8         20.0     25.5              11
+ 6 Creator 3-in-1      40.6         35       32.8              34
+ 7 Creator Expert     178.         165.      92.7              12
+ 8 DC                  70.6         51.0     41.0               8
+ 9 DOTS                 9.45         4.99     6.79             14
+10 DUPLO®              41.9         22.9     52.0              38
+# ℹ 25 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>Legos <span class="ot">&lt;-</span> Legos <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">theme_group =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    theme <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Architecture"</span>, <span class="st">"Classic"</span>, <span class="st">"Creator 3-in-1"</span>, <span class="st">"Creator Expert"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Lego® Art"</span>, <span class="st">"Ideas"</span>) <span class="sc">~</span> <span class="st">"Classic &amp; Creative Building"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    theme <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"City"</span>, <span class="st">"DUPLO®"</span>, <span class="st">"Friends"</span>, <span class="st">"Juniors"</span>, <span class="st">"Speed Champions"</span>, </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Technic™"</span>, <span class="st">"Powered UP"</span>) <span class="sc">~</span> <span class="st">"City &amp; Real-Life Play"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    theme <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Harry Potter™"</span>, <span class="st">"NINJAGO®"</span>, <span class="st">"Trolls World Tour"</span>, <span class="st">"Hidden Side"</span>, </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Unikitty!™"</span>, <span class="st">"Lego® Frozen 2"</span>) <span class="sc">~</span> <span class="st">"Fantasy &amp; Adventure"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    theme <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Batman™"</span>, <span class="st">"DC"</span>, <span class="st">"Marvel"</span>, <span class="st">"Spider-Man"</span>, <span class="st">"Powerpuff Girls™"</span>) <span class="sc">~</span> </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Action &amp; Superheroes"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    theme <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Disney™"</span>, <span class="st">"Jurassic World™"</span>, <span class="st">"Minecraft™"</span>, <span class="st">"Minions"</span>, <span class="st">"Overwatch®"</span>, </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Stranger Things"</span>, <span class="st">"THE Lego® MOVIE 2™"</span>, <span class="st">"Lego® Super Mario™"</span>, </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Star Wars™"</span>) <span class="sc">~</span> <span class="st">"Movies, Games &amp; Pop Culture"</span>,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    theme <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"BrickHeadz"</span>, <span class="st">"DOTS"</span>) <span class="sc">~</span> <span class="st">"Specialty &amp; Collectible Themes"</span>,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span>  <span class="co"># catch-all for unexpected or new themes</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 5
+  theme_group                    mean_price median_price sd_price number_of_sets
+  &lt;chr&gt;                               &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;          &lt;int&gt;
+1 Action &amp; Superheroes                 50.6         40.0     39.1             67
+2 City &amp; Real-Life Play                54.5         34.4     58.1            255
+3 Classic &amp; Creative Building          75.1         54.6     77.1             78
+4 Fantasy &amp; Adventure                  52.0         30.0     64.8            109
+5 Movies, Games &amp; Pop Culture          67.4         44.0     85.3            173
+6 Other                                48.5         30.4     45.0             40
+7 Specialty &amp; Collectible Themes       27.9         19.5     26.9             28</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="480"></p>
+<figcaption>Distribution of Price by Theme Group</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="480"></p>
+<figcaption>Amazon Price vs Pieces grouped by Theme Group</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="480"></p>
+<figcaption>Amazon Price vs Unique Pieces grouped by Theme Group</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We start off with a correlation matrix, to see relationships with the numeric variables. We see that, as expected, price and Amazon price are the most highly correlated. However, we want to attempt to predict Amazon price without using the listed price. Either way, if we did use listed price it would mean we could not get much out of using number of pieces (for one example) due to multicollinearity issues. Looking at our correlation plot, it suggests that the number of pieces, as well as the number of unique pieces may be good to take a look at for predictors. Though, seeing as these are both correlated with each other, we might run in to multicollinearity issues with these as well. This is something to keep in mind. However, with the additional context that collectors love unique pieces, it may be worth it to at least attempt to use these variables together. Our three scatter plots (Figs 1-3) confirm what our correlation plot has told us. We see strong positive correlation with price and Amazon price, suggesting price itself is a strong predictor here. This will be good then to compare with our model void of price at the end. We see positive correlations for pieces and unique pieces, neither as strong as regular price. But both suggest that these may serve as a decent predictor for Amazon price. We then move forward to trying to add a categorical predictor. Our box plot (Fig 4) suggests little difference in Amazon price between large and small sets. So we will likely not use size as a predictor. We then took a look at the themes. Glancing at the mean Amazon price for all themes, it seems there was a lot of variation. However, there is a lot of themes present in this set. We grouped these together in to six broad categories, and afterwards built a table and box plot (Fig 5) comparing across categories. We do see some apparent variation of Amazon price between categories. Enough to suggest this is possibly an interesting variable to look at as a predictor. With the additional context that many Lego collectors are focused on specific themes, this could serve as a good predictor of price. At least something to consider. However, we do have to be careful to consider the fact that the size of these groups is a little bit imbalanced. This could impact coefficient p-values and predictions. When plotting to check for interaction terms, we see that the slopes are pretty closes for both pieces and unique pieces grouped by theme group in the large cluster where most data points are present. We see the slopes vary a bit as we get further out to more spread out data points, but it is likely these are heavily influenced by the more spread out/sparse data in this area. The added complexity from an interaction term for these theme groups certainly does not seem worth it based on these graphs. Perhaps we can try it out for one of them (particularly it seems one of the themes and unique pieces may have an interaction.) But my sense is that this will not be worth it.</p>
+</section>
+<section id="models" class="level2">
+<h2 class="anchored" data-anchor-id="models">Models</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = amazon_price ~ price, data = Legos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-77.186 -14.446  -8.898   6.115 278.622 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  7.01328    1.45459   4.821 1.73e-06 ***
+price        1.09301    0.02045  53.443  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 30.25 on 748 degrees of freedom
+Multiple R-squared:  0.7925,    Adjusted R-squared:  0.7922 
+F-statistic:  2856 on 1 and 748 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>This will be our model to compare with at the end, which uses only price as a predictor. I do not want to check any assumptions here. The goal is, how well can we do making a model that does not use original listed price to predict Amazon price, and compare it to a simple model directly predicts Amazon price with regular price, seeing as this is likely what many people will do when reselling. We can see that this model has a pretty high R^2 value, suggesting it does a good job predicting, as we expected based on our exploratory data analysis. Now lets move forward to our true model building.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(amazon_price) ~ pieces, data = Legos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.2854 -0.4154  0.0418  0.4139  2.3909 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 3.208e+00  2.955e-02  108.55   &lt;2e-16 ***
+pieces      1.008e-03  4.044e-05   24.93   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6542 on 748 degrees of freedom
+Multiple R-squared:  0.4538,    Adjusted R-squared:  0.4531 
+F-statistic: 621.5 on 1 and 748 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_panel</span>(aprice_pieces, <span class="at">smoother=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_xpanel</span>(aprice_pieces, <span class="at">smoother=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I started with the model <span class="math display">\[\widehat{\text{price}_i} = \beta_0 + \beta_1 \times \text{pieces}_i + \epsilon_i\sim\mathcal{N}(0, \sigma)\]</span> but after looking at the residual plot, it was clear that a log transform was needed. So I chose to start instead by applying a log transform. So we are now looking at the model <span class="math display">\[log(\widehat{\text{price}}) = \beta_0 + \beta_1 \times
+\text{pieces} + \epsilon_i\sim\mathcal{N}(0, \sigma)\]</span> I will be carrying this log transform through the rest of the models I make from here on. I chose ‘pieces’ first as it was clearly the most correlated with Amazon price based on our data exploration. So it seems like this is the best starting point for a one variable model. After log transform, most model assumptions seem good. However, we see some issues in the residual plot. We fix this down below. Still, this model seems to be a solid starting point. Both coefficients have low p-values reflecting that they seem to be meaningful. Let us move forward to improve this model.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(amazon_price) ~ pieces + I(pieces^2), data = Legos)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.91519 -0.35910 -0.03323  0.33814  2.56292 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.933e+00  3.139e-02   93.44   &lt;2e-16 ***
+pieces       2.033e-03  7.544e-05   26.95   &lt;2e-16 ***
+I(pieces^2) -3.105e-07  2.019e-08  -15.37   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5706 on 747 degrees of freedom
+Multiple R-squared:  0.5851,    Adjusted R-squared:  0.584 
+F-statistic: 526.8 on 2 and 747 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(aprice_pieces_sqrd<span class="sc">$</span>coefficients)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)      pieces I(pieces^2) 
+ 18.7785578   1.0020354   0.9999997 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_panel</span>(aprice_pieces_sqrd, <span class="at">smoother=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_xpanel</span>(aprice_pieces_sqrd, <span class="at">smoother=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As mentioned above, we saw some issues in the residual plot in our previous model. Specifically, it seemed as though there was a quadratic relationship with the residuals and the number of pieces. So it seems we should add a quadratic term here, leading to the model <span class="math display">\[log(\widehat{\text{price}_i}) = \beta_0 + \beta_1 \times
+\text{pieces}_i + \beta_2 \times \text{pieces}^2_i + \epsilon_i\sim\mathcal{N}(0, \sigma) \]</span> Looking at the summary it seems like this quadratic term is doing something meaningful with a low p-value, suggesting a discernible quadratic relationship. Looking at residual plot vs pieces, it seems the issues present before have been rectified by the quadratic term. The plotted red line seems to be greatly skewed by outlier points. We also see a jump in <span class="math inline">\(\text{R}^2\)</span> here which is a good sign. I will carry this quadratic term through the rest of the models in this project. Based on residual plots, all other model assumptions seem to hold, though we may see some slight funneling in the residual plot. But it does not seem to be much of a concern.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(amazon_price) ~ pieces + +I(pieces^2) + unique_pieces, 
+    data = Legos)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.73984 -0.34002 -0.05167  0.32196  2.63624 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    2.816e+00  3.356e-02  83.918  &lt; 2e-16 ***
+pieces         1.334e-03  1.141e-04  11.697  &lt; 2e-16 ***
+I(pieces^2)   -2.076e-07  2.333e-08  -8.897  &lt; 2e-16 ***
+unique_pieces  2.740e-03  3.451e-04   7.940 7.44e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5483 on 746 degrees of freedom
+Multiple R-squared:  0.6174,    Adjusted R-squared:  0.6159 
+F-statistic: 401.3 on 3 and 746 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(aprice_pieces_upieces<span class="sc">$</span>coefficients)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept)        pieces   I(pieces^2) unique_pieces 
+   16.7084877     1.0013351     0.9999998     1.0027439 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">confint</span>(aprice_pieces_upieces, <span class="st">"unique_pieces"</span>, <span class="at">level=</span>.<span class="dv">95</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5 %   97.5 %
+unique_pieces 1.002065 1.003423</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_panel</span>(aprice_pieces_upieces, <span class="at">smoother=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_xpanel</span>(aprice_pieces_upieces, <span class="at">smoother=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I now look to build the model <span class="math display">\[log(\widehat{\text{price}_i}) = \beta_0 + \beta_1 \times
+\text{pieces}_i + \beta_2 \times \text{pieces}^2_i + \beta_3 \times \text{unique\_pieces}_i + \epsilon_i\sim\mathcal{N}(0, \sigma) \]</span> Here we are attempting to add this unique pieces variable, with the idea that this does influence what many collectors will pay. We also certainly saw correlation between Amazon price and this variable in our data exploration. Residual plots do not suggest a polynomial relationship with this predictor. However, there does seem to be some possible funneling with the residual plot. It does not seem severe, but something to keep in mind. Residual vs price plotted line still seems to be skewed by outlier points. All other assumptions seem to be holding well based on plots. We do see low P-values on all coefficients suggesting that all of our terms are meaningful. We do see only a moderate jump in <span class="math inline">\(\text{R}^2\)</span> suggesting maybe this additional complexity is not worth it. So unique_pieces may be a good predictor, but not be adding a lot to this model.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(amazon_price) ~ pieces + I(pieces^2) + unique_pieces + 
+    theme_group, data = Legos)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.40644 -0.32307 -0.03799  0.29569  2.57549 
+
+Coefficients:
+                                            Estimate Std. Error t value
+(Intercept)                                2.869e+00  7.045e-02  40.723
+pieces                                     1.429e-03  1.133e-04  12.609
+I(pieces^2)                               -2.205e-07  2.289e-08  -9.635
+unique_pieces                              2.611e-03  3.430e-04   7.613
+theme_groupCity &amp; Real-Life Play           3.472e-03  7.260e-02   0.048
+theme_groupClassic &amp; Creative Building    -3.402e-01  8.961e-02  -3.796
+theme_groupFantasy &amp; Adventure            -2.243e-01  8.219e-02  -2.730
+theme_groupMovies, Games &amp; Pop Culture     9.848e-02  7.603e-02   1.295
+theme_groupOther                          -2.063e-01  1.066e-01  -1.935
+theme_groupSpecialty &amp; Collectible Themes -3.958e-01  1.204e-01  -3.286
+                                          Pr(&gt;|t|)    
+(Intercept)                                &lt; 2e-16 ***
+pieces                                     &lt; 2e-16 ***
+I(pieces^2)                                &lt; 2e-16 ***
+unique_pieces                             8.17e-14 ***
+theme_groupCity &amp; Real-Life Play          0.961873    
+theme_groupClassic &amp; Creative Building    0.000159 ***
+theme_groupFantasy &amp; Adventure            0.006493 ** 
+theme_groupMovies, Games &amp; Pop Culture    0.195604    
+theme_groupOther                          0.053326 .  
+theme_groupSpecialty &amp; Collectible Themes 0.001062 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5277 on 740 degrees of freedom
+Multiple R-squared:  0.6485,    Adjusted R-squared:  0.6442 
+F-statistic: 151.7 on 9 and 740 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(aprice_pieces_upieces_theme<span class="sc">$</span>coefficients)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                              (Intercept) 
+                               17.6169215 
+                                   pieces 
+                                1.0014303 
+                              I(pieces^2) 
+                                0.9999998 
+                            unique_pieces 
+                                1.0026145 
+         theme_groupCity &amp; Real-Life Play 
+                                1.0034777 
+   theme_groupClassic &amp; Creative Building 
+                                0.7116472 
+           theme_groupFantasy &amp; Adventure 
+                                0.7990472 
+   theme_groupMovies, Games &amp; Pop Culture 
+                                1.1034948 
+                         theme_groupOther 
+                                0.8135555 
+theme_groupSpecialty &amp; Collectible Themes 
+                                0.6731551 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">confint</span>(aprice_pieces_upieces_theme, <span class="at">level=</span>.<span class="dv">95</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                               2.5 %     97.5 %
+(Intercept)                               15.3414357 20.2299139
+pieces                                     1.0012074  1.0016531
+I(pieces^2)                                0.9999997  0.9999998
+unique_pieces                              1.0019397  1.0032899
+theme_groupCity &amp; Real-Life Play           0.8701840  1.1571892
+theme_groupClassic &amp; Creative Building     0.5968527  0.8485205
+theme_groupFantasy &amp; Adventure             0.6799858  0.9389555
+theme_groupMovies, Games &amp; Pop Culture     0.9504940  1.2811240
+theme_groupOther                           0.6599130  1.0029694
+theme_groupSpecialty &amp; Collectible Themes  0.5314228  0.8526880</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_panel</span>(aprice_pieces_upieces_theme, <span class="at">smoother=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_xpanel</span>(aprice_pieces_upieces_theme, <span class="at">smoother=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="AmazonLegoDataAnalysis_files/figure-html/unnamed-chunk-25-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Finally, I look to build the model</p>
+<p><span class="math inline">\(log(\widehat{\text{price}_i}) = \beta_0 + \beta_1 \times\text{pieces}_i + \beta_2 \times \text{pieces}^2_i + \beta_3 \times\text{unique\_pieces}_i + \beta_4 \times \text{City and Real-Life Play}_i + \beta_5 \times \text{Classic and Creative}_i + \beta_6 \times \text{Fantasy and Adventure}_i + \beta_7 \times \text{Movies, Games, and Pop Culture}_i + \beta_8 \times \text{Speciality and Collectible Themes}_i + \epsilon_i\sim\mathcal{N}(0, \sigma)\)</span></p>
+<p>This model is built with the idea in mind that many collectors/sellers care about the theme of sets. Additionally, we did see apparent variation between groups, at least for some, in our data exploration. No interaction term was considered here, as it does not seem viable (or worth the complexity) based on data exploration. Model assumptions all seem good based on plots. Any possible issues have been touched on above. Same slight funneling, but not a concern. Variance seems pretty steady across all theme groups. We see a small jump in <span class="math inline">\(\text{R}^2\)</span> here again, suggesting this extra complexity may not be worth it. P-values suggest evidence that some theme groups, but not all, seem to have a statistically discernible impact on Amazon price.</p>
+<p>Let us move forward to anova between the 3 models we built after our first, as clearly this model needed the quadratic term.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aprice_pieces_sqrd, aprice_pieces_upieces)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: log(amazon_price) ~ pieces + I(pieces^2)
+Model 2: log(amazon_price) ~ pieces + +I(pieces^2) + unique_pieces
+  Res.Df    RSS Df Sum of Sq     F    Pr(&gt;F)    
+1    747 243.21                                 
+2    746 224.26  1    18.951 63.04 7.444e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aprice_pieces_sqrd, aprice_pieces_upieces_theme)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: log(amazon_price) ~ pieces + I(pieces^2)
+Model 2: log(amazon_price) ~ pieces + I(pieces^2) + unique_pieces + theme_group
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1    747 243.21                                  
+2    740 206.06  7    37.149 19.058 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aprice_pieces_upieces, aprice_pieces_upieces_theme)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: log(amazon_price) ~ pieces + +I(pieces^2) + unique_pieces
+Model 2: log(amazon_price) ~ pieces + I(pieces^2) + unique_pieces + theme_group
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1    746 224.26                                  
+2    740 206.06  6    18.198 10.892 1.215e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>The first model we built had very apparent issues, discussed as the quadratic relationship present in the residual plot. As such, we will focus more on the models built afterwards. Our first was a model predicting log price using pieces and pieces squared. Here we see a moderately high <span class="math inline">\(R^2\)</span> value, with 0.58. So this tells us that approximately 58% of the variability is explained with this model. It is difficult to obtain a meaningful interpretation of the coefficients here as this is a quadratic model. The interpretation of our intercept term is nonsensical, being that it would apply to a Lego set with no pieces. However, we can use the coefficients on our pieces terms to obtain an estimation on when the price will peak based on the number of pieces. Seeing as our coefficients on our quadratic term is negative, we know this will happen. log(price), and therefore price will peak at <span class="math inline">\(-b/2a = -2.033e-03/(2*-3.105e-07) = 3273.752\)</span>. So essentially this tells us that after around 3200 pieces, the price of sets will start to decrease rather than increase. This may suggest that at a certain point, larger Lego sets become more of a hassle or nuisance to build, so people won’t want to pay as much. We see essentially zero p-values on all of our terms here. This suggests that pieces, and pieces squared, both have statistically discernible relationships with Amazon price.</p>
+<p>We now move forward to our next model, which adds unique_pieces on to our previous model. Despite concerns with multicollinearity, we maintain ~0 p-values for all of our terms in this model. The exponentiated value of our unique_pieces term is 1.0027439. This tells us that our model predicts on average a 1.0027439 times increase in price for each additional unique piece in the set, as compared to adding an additional regular piece. In other words, a roughly .3 percent increase in price per unique_piece vs a regular piece. A 95% confidence interval tells us that we are 95% confident that this increase will be in the range from .2 to .35 percent increase per additional unique piece on average. As mentioned, we have essentially a zero p-value on this coefficient, though it is slightly higher than those of the pieces terms. This low p-value does suggest evidence that there is a statistically discernible relationship between unique_pieces and Amazon price. We also saw, when performing an F-test between this and the previous model, that we obtain an F-statistic of 63 with an essentially 0 p-values. This is a moderately high F-statistic, with the low p-value supporting that there is a statistically discernible difference. All this suggests that this model is an improvement on our previous one. Taking a look at our R^2, we see a jump to 0.6174. So around 61% of our variability is explained. This is not a large jump. However, it is still an improvement overall. All this seems to be a good sign for this model.</p>
+<p>Our final model attempts to add the categorical theme as a predictor of our Amazon price. Right away, we see an <span class="math inline">\(R^2\)</span> value of 0.6455, indicating that around 64.5% of variability is explained by this model. This is about the same sized jump as we made from our first model to our second. However, this time it comes at the cost of quite a bit more complexity. Additionally, looking at our F-tests, we get an F-stat of 21 for comparing this model and our first model, and 11 comparing this model and our second model. Both of these F-statistics have low p-values, suggesting that this is a statistically discernible difference. However, these F-values are not super high, and certainly lower than that of the second model compared to the first. In fact, we see that when comparing to just the first model, the second model made more of an improvement (based on the F test) than this third model does, despite the fact that this model still contains unique pieces. This is indication that this model may not be the best, especially given its complexity. There is still more to conclude from this model though. The coefficients for pieces, pieces^2, and unique pieces all still have essentially 0 p-values. So we still see strong evidence that these are meaningful terms. Two of the theme coefficients however have very large p-values, suggesting that these are not meaningful terms, and whether or not the set has this theme is not an important predictor compared to the number of pieces/unique pieces. However, three of our terms - Classic &amp; Creative Building, Fantasy &amp; Adventure, and Specialty &amp; Collectible Themes all have p-values below .05. Thus we have strong evidence that a Lego set being of one of these themes does actually influence the price. The exponentiated coefficients on these are 0.7042700, 0.7995849, 0.6711235 respectively. So our model expects on average a 30%, 20%, and 33% average decrease in price respectively if the Lego set is any of these themes, holding the number of pieces and unique pieces constant. Taking a look at the confidence intervals for each of these, we see a lot of variation. For a specific example, we are 95% confident that the average decrease in estimated price (holding pieces and unique pieces constant) if a set is a specialty and collectible theme is between 48% and 15%. This is a very large range. The other three themes listed also show a similarly wide range, though this is the most extreme. All this seems to tell us that a few of these themes do matter, however we are not very certain of how much. There is a lot of variability/uncertainty here. Another thing to consider, is that it seems we’ve only obtained statistically discernible results for themes that decrease price, which may not be of much interest to a collector or a seller.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>We built three main models attempting to predict Amazon price based on features of a Lego set. You as a collector, or seller, may be interested in knowing what sort of price you could put on a Lego set you have based on its features. The goal here was to build a model that does not use any information about the listed price of the Lego set to see if it was possible to ascertain resale value from just a Lego set itself. The three models we built were a quadratic model on the number of pieces, then a model adding the number of unique pieces to this, then a model adding what theme the Lego set was. The final model using theme group is not one I believe we should consider. For one, we did not see a large increase in R^2 considering the increased complexity of the model. Additionally, several of the coefficients proved to be not meaningful based on the p-values, and the ones that were had a lot of variability based on confidence intervals. Furthermore, these coefficients that were discernible do not seem to add good information for the context of reselling, especially considering yet again the complexity. There are also some obvious limitations to this model. The six theme groups used were developed by chat-gpt. I sent the list of all themes from the dataset to chat-gpt, and requested that chat-gpt break them in to six categories for me. This is possibly unreliable, and may not capture something important could easily be missed. Additionally, the size of these groups were uneven which can skew p-values and increase variability. So based on all this I’d like to turn my attention to the first two models. Between the first and the second, we again only see a small increase in R^2, from 58% to 61% variability explained. However this time we see a much larger F-statistic when comparing the two, suggesting a more significant difference. We are also adding less complexity with this change compared to the third model, thus getting the same level of increase in <span class="math inline">\(R^2\)</span> for less cost. Both models see all coefficients as statistically discernible and meaningful. All these things seem to point to model 2 being the best choice. Clearly unique_pieces does seem to influence the price. However, a counterargument against model 2 could be made. When considering the practicality, we do see unique_pieces making a very small impact, even though it is statistically discernible. With 95% confidence that price will increase by .2% to .35% per unique_piece, this does seem to be a very small impact. Especially if we consider that most sets do not have a large amount of these kinds of pieces. With this being said, for the few sets that do have a large amount of unique_pieces, this will still prove to be a large difference. So seeing as this does not add a lot of additional complexity, and clearly suggests that unique_pieces has a statistically discernible relationship with Amazon price, it seems that this second model is the ideal one.</p>
+<p>This model being the best one aligns with my expectations based on data exploration. I knew that pieces and unique_pieces would likely turn out to be the strongest and most meaningful predictors. I was slightly worried about multicollinearity, and equally as surprised when this did not seem to be much of an issue at all. I was hopeful about the theme group being a meaningful predictor, however I am not surprised that it did not seem to be as such. The variability between themes was not extremely pronounced in data exploration, though it was present. And the additional factor of the chat-gpt generated groups brings in an entire new dimension of unreliability.</p>
+<p>Turning my attention now to the original goal. How well can we predict Amazon price based on Lego set features, without using original listed price. The model we created using only price to directly predicted Amazon price saw an R^2 value of .79, so approximately 80% of variability was explained. The model we decided on as our most meaningful, model 2, only explained around 61% of the variability. So we clearly were not able to get nearly as close with these factors alone as with the listed price. This is to be expected, as one can imagine that the listed price is usually what is being put as the Amazon price on average. Another thing to consider is as follows - for this specific question, in the context of reselling as a Lego collector, this dataset may not be very accurate. I am unclear where this data comes from, and the Amazon prices are most likely largely depictions of people directly selling a set based on its original price. Factors contributing to how much collectors will pay for a set may not be reflected in this dataset. A more curated and careful dataset would likely have to be generated to get a more accurate idea for this specific question. However, if you are stuck looking to resell or find the value on a Lego set without knowing the original listed price, the models we’ve built here can serve as a good guide for what factors are the most influential in determining the Amazon price.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

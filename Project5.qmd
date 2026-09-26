@@ -2,9 +2,32 @@
 title: "A Layered Grammar of Graphics Paper Review"
 ---
 
-The fifth and final project of CMSC405 involved reading, analyzing, and presenting on a Data Science paper that is foundational in the growing field. My partner Laura Henze and I chose the paper *A Layered Grammar of Graphics* written by Hadley Wickham. This paper lays the theoretical foundation for the highly influential R data visualization package ggplot2. We created both a poster presentation, as well as two individual critical analyses of this paper. Find below the link to our poster, as well as my personal critical analysis. You may need to zoom out to view the entire poster. To return to this page, simply press the back arrow in your browser, and remember to zoom back in.
+The fifth and final project of CMSC405 involved reading, analyzing, and presenting on a Data Science paper that is foundational in the growing field. My partner Laura Henze and I chose the paper *A Layered Grammar of Graphics* written by Hadley Wickham. This paper lays the theoretical foundation for the highly influential R data visualization package ggplot2. We created both a poster presentation, as well as two individual critical analyses of this paper. Find below our poster, as well as my personal critical analysis.
 
-[Our Poster](poster.html)
+::: {.column-page}
+```{=html}
+<div id="poster-box" style="width:100%; overflow:hidden; border:1px solid #ccc;">
+  <iframe id="poster-frame" src="poster.html" loading="lazy" scrolling="no"
+    style="width:4320px; height:3648px; border:0; transform-origin:0 0;"></iframe>
+</div>
+<script>
+  // The poster is a fixed 45in x 38in (4320 x 3648 px) layout, so scale it to fit the page width.
+  (function () {
+    var box = document.getElementById("poster-box");
+    var frame = document.getElementById("poster-frame");
+    function fit() {
+      var scale = box.clientWidth / 4320;
+      frame.style.transform = "scale(" + scale + ")";
+      box.style.height = (3648 * scale) + "px";
+    }
+    fit();
+    window.addEventListener("resize", fit);
+  })();
+</script>
+```
+:::
+
+[Open the poster full screen in a new tab](poster.html){target="_blank"}
 
 # A Layered Grammar of Graphics Summary and Critical Analysis
 

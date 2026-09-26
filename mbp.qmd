@@ -1,0 +1,54 @@
+# Mighty Big Problem — Simulating the Perihelion Precession of Mercury
+
+A numerical simulation that reproduces the anomalous precession of Mercury's
+perihelion — including the famous ~43 arcseconds/century that Newtonian gravity
+can't explain and general relativity can. Written in Python with NumPy, SciPy,
+and Matplotlib.
+
+For the full derivation — the equations of motion, the initial conditions, the
+relativistic correction term, and the benchmark formulas the results are checked
+against — see the accompanying writeup in this repo.
+
+---
+
+## About
+
+The orbit of a single planet around a single star, under Newton's inverse-square
+law, is a perfectly closed ellipse — it never precesses. Yet Mercury's orbit
+does, at roughly **575 arcseconds per century** (after removing the much larger
+apparent precession from the drifting equinox). Explaining that residual was a
+genuine crisis in physics, and its resolution became one of the first triumphs of
+general relativity.
+
+This project rebuilds the answer from scratch, one effect at a time:
+
+- **Part A — Two-body baseline.** Mercury and the Sun alone. The exact answer is
+  *zero* precession, so this run measures the **numerical noise floor** of the
+  method (~−23″/century here) — a sanity check rather than a physical result.
+- **Part B — Newtonian planetary perturbations.** Jupiter, Saturn, Venus, Earth,
+  and Mars are added one by one. Their combined gravitational tugging precesses
+  Mercury's orbit by about **530″/century** (accepted value ≈ 532″).
+- **Part C — General relativity.** A single relativistic correction term is added
+  to the Sun's pull on Mercury, closing the remaining gap and taking the total to
+  about **576″/century** — a GR contribution of ~**46″/century** against the
+  textbook **43″**.
+
+Each stage numerically integrates the equations of motion with `scipy.odeint`,
+extracts the perihelion (closest point to the Sun) on every orbit, converts those
+points to angular positions, and fits a line whose slope *is* the precession rate.
+
+### Results at a glance
+
+| Stage | System | Measured precession (″/century) | Reference |
+|-------|--------|-------------------------------:|-----------|
+| A | Sun + Mercury | −22.9 | 0 (exact) — numerical floor |
+| B | + Jupiter | 147.3 | — |
+| B | + all 5 planets | 530.1 | ≈ 532 (Newtonian) |
+| C | + all planets + GR | 575.8 | ≈ 575 (532 + 43) |
+
+**GR contribution:** 575.8 − 530.1 ≈ **45.8″/century** (theory: 43.0″).
+
+Notably, the relativistic coefficient in the code is not a tuned fudge factor — it
+is the standard leading-order value derived directly from Mercury's orbit.
+
+Check out the (repo)[https://github.com/TDMZ443/Mighty-Big-Problem/tree/main] that includes the full Jupyter Notebook and technical analysis of the mathematics and physics behind our solar system.

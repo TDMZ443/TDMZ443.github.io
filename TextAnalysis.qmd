@@ -2,6 +2,8 @@
 title: "TedTalk Text Analysis"
 ---
 
-The third project in CMSC405 involved performing rudimentary text analysis on a text dataset of our choice, and delivering the findings of our analysis in a blog style format. My partner Laura Henze and I chose to analyze a large TedTalk dataset, which contains the full transcripts for a wide variety TedTalks. This project was too large to render properly on this website. Click the link below to route to our full blog post. Simply press the back arrow in your browser to navigate back to this page after you're done.
+The third project in CMSC405 involved performing rudimentary text analysis on a text dataset of our choice, and delivering the findings of our analysis in a blog style format. My partner Laura Henze and I chose to analyze a large TedTalk dataset, which contains the full transcripts for a wide variety TedTalks. This project was too large to render directly on this website, so our full blog post is embedded below.
 
-[TedTalk Text Analysis Blog Post](Project_3_Template.html)
+<iframe src="Project_3_Template.html" width="100%" height="900px" loading="lazy" style="border:1px solid #ccc;"></iframe>
+
+[Open the blog post in a new tab](Project_3_Template.html){target="_blank"}

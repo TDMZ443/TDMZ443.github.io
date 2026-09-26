@@ -1,0 +1,42 @@
+---
+title: "Analysis of BikeShare Program"
+author: "Irene Yank and Tristan Zook"
+---
+
+::: {.callout-note}
+This is the plain-language report that accompanies the [technical analysis](BikeShare.qmd) of the DC BikeShare data.
+:::
+
+## Overview
+
+We trained multiple types of machine learning models to predict the number of bikes rented each day through the Capital BikeShare program in D.C. The data contained several variables influencing predictions of bike count, including features like wind speed and temperature, as well as information on the month, season, and whether it was a working day or holiday. Our final model can be used to inform you of how to proceed in the planning/implementation of bike share programs across the city.
+
+## How Accurate Is the Model?
+
+We found the optimal model to be what we call a random forest applied directly to the raw dataset. When testing our model, we found it can make predictions within around 1160 bikes rented for any given day. When taking into account the stability of our model during training, we could perhaps expect this variability to be more around 1100 to 1200 off the true count when making predictions. What this variability really means is that when predicting, we can expect to either over- or underestimate the true count by a value within this reported margin.
+
+With this information, you can make an estimate about how many bikes to put out/have available on any given day. We may suggest having around 500 more than what our model may predict for a given day, as it is possible that our model may underestimate. However, considering available resources, having an additional 1000 bikes may not be feasible.
+
+## What Drives Bike Rentals?
+
+I am sure you may also be interested in any specific factors that might indicate when more people are more likely to rent bikes. For example, how can we expect the count to change on a weekday versus a weekend? Unfortunately, our model does a poor job of telling us such specific correlations.
+
+We can determine the features that seem to influence the predicted count of bikes rented the most. These were:
+
+- the temperature
+- the average temperature
+- the humidity
+
+However, using our model, we cannot determine how directly these features influence our prediction. Rather, just that they influence them in some way. In the case of some features, we may be able to ascertain their influence by thinking about it. It makes sense that more people may wish to rent bikes when it is warm out, for example. However, even with these qualitative guesses, we may be missing information. For example, if it is too hot, maybe fewer people will rent bikes.
+
+Furthermore, there are some features that may have impacts we cannot qualitatively predict. For example, how things such as weekday vs weekend, holiday, or the weather (not temperature directly, more like sunny or cloudy) can impact our count.
+
+## A More Interpretable Alternative
+
+This is the downside of our model. If you are interested in a model that can better tell us these things, we have also tested out a linear model, which is much more interpretable. With this, we can see directly how each predictor is correlated with the count prediction. However, in training, this model was consistently more unstable with higher prediction error. So it will be more inaccurate. If this is something you are interested in, please let us know.
+
+This concludes our report. Let us know if there are any questions.
+
+------------------------------------------------------------------------
+
+*Dataset Citation: Fanaee-T, Hadi. "Bike Sharing." UCI Machine Learning Repository, 2013, <https://doi.org/10.24432/C5W894>.*

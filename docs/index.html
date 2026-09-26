@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Tristan Zook Personal Portfolio – Tristan Zook</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -32,14 +38,13 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c82218b12ac0f327fa8bd7d074ce2147.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-445b8638c3d06994fee0907d791121c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -99,15 +104,38 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./about.html"> 
 <span class="menu-text">My Life as a Student Athlete</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./capstone.html"> 
-<span class="menu-text">My Computer Science Capstone</span></a>
-  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-my-405-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">My 405 Projects</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-computer-science-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Computer Science Projects</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-my-405-projects">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-computer-science-projects">    
+        <li>
+    <a class="dropdown-item" href="./capstone.html">
+ <span class="dropdown-text">My Computer Science Capstone</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./givvy.html">
+ <span class="dropdown-text">Givvy: A Charity Donation Web Application Backend</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data-sciencestatistics-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Data Science/Statistics Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-data-sciencestatistics-projects">    
+        <li>
+    <a class="dropdown-item" href="./BikeShare.html">
+ <span class="dropdown-text">Machine Learning Bike Share Data Analysis Technical Report</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./BikeShareReport.html">
+ <span class="dropdown-text">Machine Learning Bike Share Data Analysis Non-Technical Presentation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./AmazonLegoDataAnalysis.html">
+ <span class="dropdown-text">Amazon Lego Statistical Modeling</span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="./SqlProject.html">
  <span class="dropdown-text">Mountaneering Data Analysis with SQL</span></a>
@@ -123,6 +151,25 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./Project5.html">
  <span class="dropdown-text">A Layered Grammar of Graphics Paper Review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-mathematics-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Mathematics Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-mathematics-projects">    
+        <li>
+    <a class="dropdown-item" href="./probexp.html">
+ <span class="dropdown-text">Probability Scenario Simulation and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mathcapstone.html">
+ <span class="dropdown-text">My Mathematics Capstone</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mbp.html">
+ <span class="dropdown-text">The Mighty Big Problem</span></a>
   </li>  
     </ul>
   </li>

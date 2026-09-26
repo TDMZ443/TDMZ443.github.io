@@ -1,0 +1,11 @@
+---
+title: "Mathematics Senior Capstone: Conjugacy and S-graph Shifts"
+---
+
+For my mathematics senior capstone, I studied conjugacy in symbolic dynamics, focusing on a class of shift spaces called $\mathcal{S}$-graph shifts. Conjugacy is a notion of equivalence between shifts that preserves their dynamical behavior, but it is difficult to establish, and a concrete result on conjugacy for $\mathcal{S}$-graph shifts remains an open problem.
+
+In the paper, I work through a motivating example of two conjugate $\mathcal{S}$-graph shifts, examine a proposed (but unproven) tool called the core graph, and explore new ideas about disjoint cycle sets and Dillon's entropy formula that suggest directions for future investigation.
+
+[Download the paper (PDF)](files/Capstone_Paper.pdf){target="_blank"}
+
+<iframe src="files/Capstone_Paper.pdf" width="100%" height="900px" style="border:1px solid #ccc;"></iframe>

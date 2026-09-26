@@ -1,0 +1,18 @@
+Variable Name,Role,Description,Units
+instant,ID,record index,
+dteday,Feature,date,
+season,Feature,"1:winter, 2:spring, 3:summer, 4:fall",
+year,Feature,"year (0: 2011, 1: 2012)",
+month,Feature,month (1 to 12),
+hr,Feature,hour (0 to 23),
+holiday,Feature,weather day is holiday or not (extracted from http://dchr.dc.gov/page/holiday-schedule),
+weekday,Feature,day of the week,
+workingday,Feature,"if day is neither weekend nor holiday is 1, otherwise is 0",
+weathersit,Feature,"- 1: Clear, Few clouds, Partly cloudy, Partly cloudy",
+temp,Feature,"Normalized temperature in Celsius. The values are derived via (t-t_min)/(t_max-t_min), t_min=-8, t_max=+39 (only in hourly scale)",C
+atemp,Feature,"Normalized feeling temperature in Celsius. The values are derived via (t-t_min)/(t_max-t_min), t_min=-16, t_max=+50 (only in hourly scale)",C
+hum,Feature,Normalized humidity. The values are divided to 100 (max),
+windspeed,Feature,Normalized wind speed. The values are divided to 67 (max),
+casual,Other,count of casual users,
+registered,Other,count of registered users,
+count,Target,count of total rental bikes including both casual and registered,

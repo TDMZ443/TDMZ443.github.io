@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Irene Yank and Tristan Zook">
 
-<title>TedTalk Text Analysis – Tristan Zook</title>
+<title>Analysis of BikeShare Program – Tristan Zook</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -160,15 +161,11 @@ ul.task-list li input[type="checkbox"] {
     <ul class="dropdown-menu" aria-labelledby="nav-menu-mathematics-projects">    
         <li>
     <a class="dropdown-item" href="./probexp.html">
- <span class="dropdown-text">Probability Scenario Simulation and Analysis</span></a>
+ <span class="dropdown-text">Probability Scenario Similution and Analysis</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./mathcapstone.html">
  <span class="dropdown-text">My Mathematics Capstone</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./mbp.html">
- <span class="dropdown-text">The Mighty Big Problem</span></a>
   </li>  
     </ul>
   </li>
@@ -183,21 +180,36 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#how-accurate-is-the-model" id="toc-how-accurate-is-the-model" class="nav-link" data-scroll-target="#how-accurate-is-the-model">How Accurate Is the Model?</a></li>
+  <li><a href="#what-drives-bike-rentals" id="toc-what-drives-bike-rentals" class="nav-link" data-scroll-target="#what-drives-bike-rentals">What Drives Bike Rentals?</a></li>
+  <li><a href="#a-more-interpretable-alternative" id="toc-a-more-interpretable-alternative" class="nav-link" data-scroll-target="#a-more-interpretable-alternative">A More Interpretable Alternative</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">TedTalk Text Analysis</h1>
+<h1 class="title">Analysis of BikeShare Program</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Irene Yank and Tristan Zook </p>
+          </div>
+  </div>
     
   
     
@@ -208,12 +220,49 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>The third project in CMSC405 involved performing rudimentary text analysis on a text dataset of our choice, and delivering the findings of our analysis in a blog style format. My partner Laura Henze and I chose to analyze a large TedTalk dataset, which contains the full transcripts for a wide variety TedTalks. This project was too large to render directly on this website, so our full blog post is embedded below.</p>
-<iframe src="Project_3_Template.html" width="100%" height="900px" loading="lazy" style="border:1px solid #ccc;">
-</iframe>
-<p><a href="Project_3_Template.html" target="_blank">Open the blog post in a new tab</a></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is the plain-language report that accompanies the <a href="./BikeShare.html">technical analysis</a> of the DC BikeShare data.</p>
+</div>
+</div>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>We trained multiple types of machine learning models to predict the number of bikes rented each day through the Capital BikeShare program in D.C. The data contained several variables influencing predictions of bike count, including features like wind speed and temperature, as well as information on the month, season, and whether it was a working day or holiday. Our final model can be used to inform you of how to proceed in the planning/implementation of bike share programs across the city.</p>
+</section>
+<section id="how-accurate-is-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="how-accurate-is-the-model">How Accurate Is the Model?</h2>
+<p>We found the optimal model to be what we call a random forest applied directly to the raw dataset. When testing our model, we found it can make predictions within around 1160 bikes rented for any given day. When taking into account the stability of our model during training, we could perhaps expect this variability to be more around 1100 to 1200 off the true count when making predictions. What this variability really means is that when predicting, we can expect to either over- or underestimate the true count by a value within this reported margin.</p>
+<p>With this information, you can make an estimate about how many bikes to put out/have available on any given day. We may suggest having around 500 more than what our model may predict for a given day, as it is possible that our model may underestimate. However, considering available resources, having an additional 1000 bikes may not be feasible.</p>
+</section>
+<section id="what-drives-bike-rentals" class="level2">
+<h2 class="anchored" data-anchor-id="what-drives-bike-rentals">What Drives Bike Rentals?</h2>
+<p>I am sure you may also be interested in any specific factors that might indicate when more people are more likely to rent bikes. For example, how can we expect the count to change on a weekday versus a weekend? Unfortunately, our model does a poor job of telling us such specific correlations.</p>
+<p>We can determine the features that seem to influence the predicted count of bikes rented the most. These were:</p>
+<ul>
+<li>the temperature</li>
+<li>the average temperature</li>
+<li>the humidity</li>
+</ul>
+<p>However, using our model, we cannot determine how directly these features influence our prediction. Rather, just that they influence them in some way. In the case of some features, we may be able to ascertain their influence by thinking about it. It makes sense that more people may wish to rent bikes when it is warm out, for example. However, even with these qualitative guesses, we may be missing information. For example, if it is too hot, maybe fewer people will rent bikes.</p>
+<p>Furthermore, there are some features that may have impacts we cannot qualitatively predict. For example, how things such as weekday vs weekend, holiday, or the weather (not temperature directly, more like sunny or cloudy) can impact our count.</p>
+</section>
+<section id="a-more-interpretable-alternative" class="level2">
+<h2 class="anchored" data-anchor-id="a-more-interpretable-alternative">A More Interpretable Alternative</h2>
+<p>This is the downside of our model. If you are interested in a model that can better tell us these things, we have also tested out a linear model, which is much more interpretable. With this, we can see directly how each predictor is correlated with the count prediction. However, in training, this model was consistently more unstable with higher prediction error. So it will be more inaccurate. If this is something you are interested in, please let us know.</p>
+<p>This concludes our report. Let us know if there are any questions.</p>
+<hr>
+<p><em>Dataset Citation: Fanaee-T, Hadi. “Bike Sharing.” UCI Machine Learning Repository, 2013, <a href="https://doi.org/10.24432/C5W894" class="uri">https://doi.org/10.24432/C5W894</a>.</em></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
