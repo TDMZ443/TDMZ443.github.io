@@ -282,8 +282,3 @@ plot(PMF)
 
 We see our plot matches as well, minus the indexing being off in our calculated PMF. Very cool and satisfying to see this work out! 
 
-## Instructor Comments:
-*Well done! As you finish this up for your final submission, you should remove the original subproblem, since you didn't end up using it. Also, try to work on the formatting of mathematics in line. For instance, when you refer to a probability in the sentence, wrap it in dollar signs so that it typesets in the same way as in your displays: $P(X=k|a)$, etc. Finally, note that your index is off by one in your final PMF and plot, just like in my analysis --- you should point this out.*
-
-## Instructor Comments:
-*Good work. 10/10*
