@@ -4,8 +4,7 @@ title: "Computer Science Senior Capstone"
 
 
 For my computer science senior capstone, I begun working on a small business
-with two partners, Jamie Vee and Aaron Stathopoylos. Jamie is on the 
-business side of things, and me and Aaron have been developing our product. This 
+with two partners, one being my good friend Aaron Stathopoylos. We have one partner focused on the business end, while me and Aaron have been developing our product. This 
 product is called DEMS. The goal is to build a comprehensive system for dental offices
 to track and manage all their equipment and equipment maintenance, from purchase through
 its entire lifecycle. This is currently a massive hole in the dental industry. We hope to 
