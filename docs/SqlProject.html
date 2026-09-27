@@ -195,11 +195,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="dropdown-menu" aria-labelledby="nav-menu-mathematics-projects">    
         <li>
     <a class="dropdown-item" href="./probexp.html">
- <span class="dropdown-text">Probability Scenario Similution and Analysis</span></a>
+ <span class="dropdown-text">Probability Scenario Simulation and Analysis</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./mathcapstone.html">
  <span class="dropdown-text">My Mathematics Capstone</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mbp.html">
+ <span class="dropdown-text">The Mighty Big Problem</span></a>
   </li>  
     </ul>
   </li>
@@ -283,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>con_exp <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(duckdb<span class="sc">::</span><span class="fu">duckdb</span>(), <span class="at">dbdir =</span> <span class="st">"exp_db"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>duckdb keeps downloaded extensions and secrets in a temporary directory:
-ℹ /var/folders/yw/z7lhcw3n4ddblqzq_7hp9dm80000gn/T//RtmpvNwiDS/duckdb
+ℹ /var/folders/yw/z7lhcw3n4ddblqzq_7hp9dm80000gn/T//Rtmpbe8M96/duckdb
 This is removed when the R session ends.
 • Extensions are re-downloaded each session.
 • Secrets are lost.
@@ -1444,7 +1448,31 @@ $ injured         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Peri</td>
+<td style="text-align: left;">Lobuje East</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kangchung Nup</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ripimo Shar</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nangamari I</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lugula</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sisne Himal</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Thorong Peak</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
@@ -1452,35 +1480,11 @@ $ injured         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Naulekh</td>
+<td style="text-align: left;">Bhrikuti Shail</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Chhuboche</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Ghyuthumba Main</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Bhemdang Ri</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Saipal East Humla</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Domo</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Langpo</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Firnkopf West</td>
+<td style="text-align: left;">Mustang Peak</td>
 <td style="text-align: right;">1</td>
 </tr>
 </tbody>
@@ -1527,7 +1531,7 @@ $ injured         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F
 <td style="text-align: right;">0.8888889</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Tengkoma</td>
+<td style="text-align: left;">Nuptse West II</td>
 <td style="text-align: right;">0.8333333</td>
 </tr>
 <tr class="odd">
@@ -1535,7 +1539,7 @@ $ injured         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F
 <td style="text-align: right;">0.8333333</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Nuptse West II</td>
+<td style="text-align: left;">Tengkoma</td>
 <td style="text-align: right;">0.8333333</td>
 </tr>
 <tr class="odd">
@@ -1551,15 +1555,15 @@ $ injured         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F
 <td style="text-align: right;">0.7777778</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Leonpo Gang East</td>
-<td style="text-align: right;">0.7500000</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">Changwathang</td>
 <td style="text-align: right;">0.7500000</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">Norbu Kang</td>
+<td style="text-align: right;">0.7500000</td>
+</tr>
 <tr class="even">
-<td style="text-align: left;">Annapurna I East</td>
+<td style="text-align: left;">Urkema</td>
 <td style="text-align: right;">0.7500000</td>
 </tr>
 </tbody>
@@ -1733,54 +1737,54 @@ $ injured         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Langtang Lirung</td>
-<td style="text-align: right;">0.3870968</td>
-<td style="text-align: right;">3.597850</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Tawoche</td>
-<td style="text-align: right;">0.5714286</td>
-<td style="text-align: right;">4.047619</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Langtang Ri</td>
-<td style="text-align: right;">0.4444444</td>
-<td style="text-align: right;">2.925926</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Ganesh IV</td>
+<td style="text-align: left;">Churen Himal East</td>
 <td style="text-align: right;">0.3333333</td>
-<td style="text-align: right;">3.041667</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Yalung Kang</td>
-<td style="text-align: right;">0.6666667</td>
-<td style="text-align: right;">2.082363</td>
+<td style="text-align: right;">2.877778</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Nilgiri South</td>
-<td style="text-align: right;">0.5000000</td>
-<td style="text-align: right;">5.000000</td>
+<td style="text-align: left;">Manaslu</td>
+<td style="text-align: right;">0.5765766</td>
+<td style="text-align: right;">2.027507</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Sita Chuchura</td>
-<td style="text-align: right;">0.5000000</td>
-<td style="text-align: right;">6.250000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Kande Hiunchuli</td>
+<td style="text-align: left;">Gangapurna</td>
 <td style="text-align: right;">0.2500000</td>
-<td style="text-align: right;">2.285714</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Gyachung Kang</td>
-<td style="text-align: right;">0.4444444</td>
-<td style="text-align: right;">3.772853</td>
+<td style="text-align: right;">2.778472</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Lamjung Himal</td>
-<td style="text-align: right;">0.7142857</td>
-<td style="text-align: right;">2.666667</td>
+<td style="text-align: left;">Manaslu North</td>
+<td style="text-align: right;">0.5000000</td>
+<td style="text-align: right;">3.385417</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dhaulagiri II</td>
+<td style="text-align: right;">0.4000000</td>
+<td style="text-align: right;">1.910290</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dhaulagiri V</td>
+<td style="text-align: right;">0.6666667</td>
+<td style="text-align: right;">1.289855</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ngojumba Kang II</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">3.916667</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Churen Himal Central</td>
+<td style="text-align: right;">0.6666667</td>
+<td style="text-align: right;">2.014286</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dhaulagiri VI</td>
+<td style="text-align: right;">0.6000000</td>
+<td style="text-align: right;">1.708333</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Annapurna I East</td>
+<td style="text-align: right;">0.7500000</td>
+<td style="text-align: right;">2.656250</td>
 </tr>
 </tbody>
 </table>
